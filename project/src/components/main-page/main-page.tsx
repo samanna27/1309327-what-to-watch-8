@@ -1,6 +1,14 @@
 import React from 'react';
 import SmallFilmCard from '../small-film-card/small-film-card';
 
+let i=1;
+const FILM_CARD_COUNT = new Array(20).fill('').map((index) => {
+  index=i;
+  i++;
+
+  return index;
+});
+
 type MainPageProps = {
   promoFilmTitle: string;
   promoFilmGenre: string;
@@ -108,26 +116,11 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate}: MainPageProps
           </ul>
 
           <div className="catalog__films-list">
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
-            <SmallFilmCard />
+            {
+              FILM_CARD_COUNT.map((index) => (
+                <SmallFilmCard key={index}/>
+              ))
+            }
           </div>
 
           <div className="catalog__more">

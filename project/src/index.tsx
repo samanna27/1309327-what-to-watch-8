@@ -10,6 +10,6 @@ const PromoFilmData = {
 
 ReactDOM.render(
   <React.StrictMode>
-    <App promoFilmTitle = {PromoFilmData.PROMO_FILM_TITLE} promoFilmGenre = {PromoFilmData.PROMO_FILM_GENRE} promoFilmDate = {PromoFilmData.PROMO_FILM_DATE} />
+    <App promoFilmTitle={PromoFilmData.PROMO_FILM_TITLE} promoFilmGenre={PromoFilmData.PROMO_FILM_GENRE} promoFilmDate={PromoFilmData.PROMO_FILM_DATE} />
   </React.StrictMode>,
   document.getElementById('root'));
