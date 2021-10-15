@@ -2,9 +2,9 @@ import React from 'react';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import Logo from '../logo/logo';
 
-let i=1;
+let i = 1;
 const FILM_CARD_COUNT = new Array(20).fill('').map((index) => {
-  index=i;
+  index = i;
   i++;
 
   return index;
