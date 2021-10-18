@@ -1,3 +1,5 @@
+import Logo from '../logo/logo';
+
 function FilmScreen():JSX.Element {
   return (
     <>
@@ -42,13 +44,7 @@ function FilmScreen():JSX.Element {
           <h1 className="visually-hidden">WTW</h1>
 
           <header className="page-header film-card__head">
-            <div className="logo">
-              <a href="main.html" className="logo__link">
-                <span className="logo__letter logo__letter--1">W</span>
-                <span className="logo__letter logo__letter--2">T</span>
-                <span className="logo__letter logo__letter--3">W</span>
-              </a>
-            </div>
+            <Logo />
 
             <ul className="user-block">
               <li className="user-block__item">

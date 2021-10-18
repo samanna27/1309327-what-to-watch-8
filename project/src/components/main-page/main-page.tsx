@@ -1,9 +1,10 @@
 import React from 'react';
 import SmallFilmCard from '../small-film-card/small-film-card';
+import Logo from '../logo/logo';
 
-let i=1;
+let i = 1;
 const FILM_CARD_COUNT = new Array(20).fill('').map((index) => {
-  index=i;
+  index = i;
   i++;
 
   return index;
@@ -26,13 +27,7 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate}: MainPageProps
         <h1 className="visually-hidden">WTW</h1>
 
         <header className="page-header film-card__head">
-          <div className="logo">
-            <button className="logo__link">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </button>
-          </div>
+          <Logo />
 
           <ul className="user-block">
             <li className="user-block__item">
