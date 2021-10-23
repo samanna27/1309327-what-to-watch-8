@@ -1,6 +1,14 @@
 import Logo from '../logo/logo';
+import {Film} from '../../types/film';
 
-function FilmScreen():JSX.Element {
+type FilmScreenProps = {
+  films: Film[];
+}
+
+function FilmScreen(films: FilmScreenProps):JSX.Element {
+  const [{firstFilm}]= films;
+  const {id, poster, preview, title, genre, releaseDate} = firstFilm;
+
   return (
     <>
       <div className="visually-hidden">
@@ -35,10 +43,10 @@ function FilmScreen():JSX.Element {
         </svg>
       </div>
 
-      <section className="film-card film-card--full">
+      <section className="film-card film-card--full" key={id}>
         <div className="film-card__hero">
           <div className="film-card__bg">
-            <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel" />
+            <img src={poster} alt="The Grand Budapest Hotel" />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -60,16 +68,16 @@ function FilmScreen():JSX.Element {
 
           <div className="film-card__wrap">
             <div className="film-card__desc">
-              <h2 className="film-card__title">The Grand Budapest Hotel</h2>
+              <h2 className="film-card__title">{title}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">Drama</span>
-                <span className="film-card__year">2014</span>
+                <span className="film-card__genre">{genre}</span>
+                <span className="film-card__year">{releaseDate}</span>
               </p>
 
               <div className="film-card__buttons">
                 <button className="btn btn--play film-card__button" type="button">
                   <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
+                    <use xlinkHref={preview}></use>
                   </svg>
                   <span>Play</span>
                 </button>

@@ -8,14 +8,16 @@ import FilmScreen from '../film-screen/film-screen';
 import AddReviewScreen from '../add-review-screen/add-review-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import PrivateRoute from '../private-route/private-route';
+import {Film} from '../../types/film';
 
 type AppScreenProps = {
   promoFilmTitle: string;
   promoFilmGenre: string;
   promoFilmDate: number;
+  films: Film[];
 }
 
-function App({promoFilmTitle, promoFilmGenre, promoFilmDate}: AppScreenProps): JSX.Element {
+function App({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: AppScreenProps): JSX.Element {
   return (
     <BrowserRouter>
       <Switch>
@@ -38,7 +40,7 @@ function App({promoFilmTitle, promoFilmGenre, promoFilmDate}: AppScreenProps): J
           <PlayerScreen />
         </Route>
         <Route exact path={AppRoute.Film}>
-          <FilmScreen />
+          <FilmScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.AddReview}>
           <AddReviewScreen />
