@@ -1,13 +1,14 @@
 import Logo from '../logo/logo';
-import {Film} from '../../types/film';
+import { Film } from '../../types/film';
 
 type FilmScreenProps = {
   films: Film[];
 }
 
-function FilmScreen(films: FilmScreenProps):JSX.Element {
-  const [{firstFilm}]= films;
-  const {id, poster, preview, title, genre, releaseDate} = firstFilm;
+function FilmScreen({films}: FilmScreenProps):JSX.Element {
+  const firstFilm = films[0];
+  const { id, poster, title, bigPoster, genre, releaseDate, overview, director, actors } = firstFilm;
+  const { description } = overview;
 
   return (
     <>
@@ -46,7 +47,7 @@ function FilmScreen(films: FilmScreenProps):JSX.Element {
       <section className="film-card film-card--full" key={id}>
         <div className="film-card__hero">
           <div className="film-card__bg">
-            <img src={poster} alt="The Grand Budapest Hotel" />
+            <img src={bigPoster} alt="The Grand Budapest Hotel" />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -77,7 +78,7 @@ function FilmScreen(films: FilmScreenProps):JSX.Element {
               <div className="film-card__buttons">
                 <button className="btn btn--play film-card__button" type="button">
                   <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref={preview}></use>
+                    <use xlinkHref="#play-s"></use>
                   </svg>
                   <span>Play</span>
                 </button>
@@ -96,7 +97,7 @@ function FilmScreen(films: FilmScreenProps):JSX.Element {
         <div className="film-card__wrap film-card__translate-top">
           <div className="film-card__info">
             <div className="film-card__poster film-card__poster--big">
-              <img src="img/the-grand-budapest-hotel-poster.jpg" alt="The Grand Budapest Hotel poster" width="218" height="327" />
+              <img src={poster} alt="The Grand Budapest Hotel poster" width="218" height="327" />
             </div>
 
             <div className="film-card__desc">
@@ -123,13 +124,11 @@ function FilmScreen(films: FilmScreenProps):JSX.Element {
               </div>
 
               <div className="film-card__text">
-                <p>In the 1930s, the Grand Budapest Hotel is a popular European ski resort, presided over by concierge Gustave H. (Ralph Fiennes). Zero, a junior lobby boy, becomes Gustave`@apos;`s friend and protege.</p>
+                <p>{description}</p>
 
-                <p>Gustave prides himself on providing first-className service to the hotel`@apos;`s guests, including satisfying the sexual needs of the many elderly women who stay there. When one of Gustave`@apos;`s lovers dies mysteriously, Gustave finds himself the recipient of a priceless painting and the chief suspect in her murder.</p>
+                <p className="film-card__director"><strong>Director: {director}</strong></p>
 
-                <p className="film-card__director"><strong>Director: Wes Anderson</strong></p>
-
-                <p className="film-card__starring"><strong>Starring: Bill Murray, Edward Norton, Jude Law, Willem Dafoe and other</strong></p>
+                <p className="film-card__starring"><strong>Starring: {actors} and other</strong></p>
               </div>
             </div>
           </div>

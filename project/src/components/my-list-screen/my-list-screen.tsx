@@ -1,4 +1,9 @@
 import Logo from '../logo/logo';
+import { Film } from '../../types/film';
+
+type PlayerScreenProps = {
+  films: Film[];
+}
 
 function MyListScreen():JSX.Element {
   return (

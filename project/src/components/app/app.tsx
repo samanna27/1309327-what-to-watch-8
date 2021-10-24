@@ -23,7 +23,7 @@ function App({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: AppScreenPr
       <Switch>
         <Route exact path={AppRoute.Main}>
           <MainPage
-            promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate}
+            promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate} films={films}
           />
         </Route>
         <Route exact path={AppRoute.SignIn}>
@@ -32,18 +32,18 @@ function App({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: AppScreenPr
         <PrivateRoute
           exact
           path={AppRoute.MyList}
-          render={()=><MyListScreen />}
+          render={()=><MyListScreen films={films}/>}
           authorizationStatus={AuthorizationStatus.NoAuth}
         >
         </PrivateRoute>
         <Route exact path={AppRoute.Player}>
-          <PlayerScreen />
+          <PlayerScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.Film}>
           <FilmScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.AddReview}>
-          <AddReviewScreen />
+          <AddReviewScreen films={films}/>
         </Route>
         <Route>
           <NotFoundScreen />
