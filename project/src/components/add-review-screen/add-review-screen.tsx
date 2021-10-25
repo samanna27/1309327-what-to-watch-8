@@ -1,8 +1,3 @@
-import { Film } from '../../types/film';
-
-type PlayerScreenProps = {
-  films: Film[];
-}
 
 function AddReviewScreen():JSX.Element {
   return (
