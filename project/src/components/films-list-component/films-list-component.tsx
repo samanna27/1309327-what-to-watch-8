@@ -1,14 +1,6 @@
 import SmallFilmCard from '../small-film-card/small-film-card';
 import { Film } from '../../types/film';
 
-// let i = 1;
-// const FILM_CARD_COUNT = new Array(20).fill('').map((index) => {
-//   index = i;
-//   i++;
-
-//   return index;
-// });
-
 type FilmListProps = {
   films: Film[];
 }

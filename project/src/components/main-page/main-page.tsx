@@ -1,16 +1,7 @@
 import React from 'react';
-// import SmallFilmCard from '../small-film-card/small-film-card';
 import Logo from '../logo/logo';
 import FilmsListComponent from '../films-list-component/films-list-component';
 import { Film } from '../../types/film';
-
-// let i = 1;
-// const FILM_CARD_COUNT = new Array(20).fill('').map((index) => {
-//   index = i;
-//   i++;
-
-//   return index;
-// });
 
 type MainPageProps = {
   promoFilmTitle: string;
@@ -114,14 +105,6 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
           </ul>
 
           {<FilmsListComponent films={films} />}
-
-          {/* <div className="catalog__films-list">
-            {
-              FILM_CARD_COUNT.map((index) => (
-                <SmallFilmCard key={index}/>
-              ))
-            }
-          </div> */}
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>
