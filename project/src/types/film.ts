@@ -28,3 +28,5 @@ addedToWatchList: boolean;
 overview: FilmOverview;
 reviews: FilmReview[];
 };
+
+export type ReviewStarRating = readonly boolean[];

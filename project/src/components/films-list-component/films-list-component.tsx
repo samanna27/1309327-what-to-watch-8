@@ -14,16 +14,15 @@ type FilmListProps = {
 }
 
 function FilmsListComponent({films}: FilmListProps): JSX.Element {
-  const filmsList={films};
-  console.log(filmsList);
+  const filmsList=films;
 
   return (
     <div className="catalog__films-list">
-    {
-    filmsList.map((film) => (
-      <SmallFilmCard key={film.id} film={film}/>
-    ))
-    }
+      {
+        filmsList.map((film) => (
+          <SmallFilmCard key={film.id} film={film}/>
+        ))
+      }
     </div>
   );
 }

@@ -43,7 +43,11 @@ function App({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: AppScreenPr
           <FilmScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.AddReview}>
-          <AddReviewScreen films={films}/>
+          <AddReviewScreen films={films}
+            onReviewInput={() => {
+              throw new Error('Function \'onReviewInput\' isn\'t implemented.');
+            }}
+          />
         </Route>
         <Route>
           <NotFoundScreen />

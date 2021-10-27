@@ -124,7 +124,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
               </div>
 
               <div className="film-card__text">
-                <p>{description}</p>
+                <p style={{whiteSpace: 'pre-line'}}>{description}</p>
 
                 <p className="film-card__director"><strong>Director: {director}</strong></p>
 
