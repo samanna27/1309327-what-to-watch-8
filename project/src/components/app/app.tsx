@@ -8,20 +8,22 @@ import FilmScreen from '../film-screen/film-screen';
 import AddReviewScreen from '../add-review-screen/add-review-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import PrivateRoute from '../private-route/private-route';
+import {Film} from '../../types/film';
 
 type AppScreenProps = {
   promoFilmTitle: string;
   promoFilmGenre: string;
   promoFilmDate: number;
+  films: Film[];
 }
 
-function App({promoFilmTitle, promoFilmGenre, promoFilmDate}: AppScreenProps): JSX.Element {
+function App({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: AppScreenProps): JSX.Element {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path={AppRoute.Main}>
           <MainPage
-            promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate}
+            promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate} films={films}
           />
         </Route>
         <Route exact path={AppRoute.SignIn}>
@@ -30,18 +32,22 @@ function App({promoFilmTitle, promoFilmGenre, promoFilmDate}: AppScreenProps): J
         <PrivateRoute
           exact
           path={AppRoute.MyList}
-          render={()=><MyListScreen />}
+          render={()=><MyListScreen films={films}/>}
           authorizationStatus={AuthorizationStatus.NoAuth}
         >
         </PrivateRoute>
         <Route exact path={AppRoute.Player}>
-          <PlayerScreen />
+          <PlayerScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.Film}>
-          <FilmScreen />
+          <FilmScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.AddReview}>
-          <AddReviewScreen />
+          <AddReviewScreen films={films}
+            onReviewInput={() => {
+              throw new Error('Function \'onReviewInput\' isn\'t implemented.');
+            }}
+          />
         </Route>
         <Route>
           <NotFoundScreen />

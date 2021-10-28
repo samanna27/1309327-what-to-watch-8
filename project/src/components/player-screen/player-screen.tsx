@@ -1,4 +1,11 @@
-function PlayerScreen():JSX.Element {
+import { Film } from '../../types/film';
+
+type PlayerScreenProps = {
+  films: Film[];
+}
+
+function PlayerScreen({films}: PlayerScreenProps):JSX.Element {
+  const {duration} = films[0];
   return (
     <>
       <div className="visually-hidden">
@@ -41,7 +48,7 @@ function PlayerScreen():JSX.Element {
               <progress className="player__progress" value="30" max="100"></progress>
               <div className="player__toggler" style={{left: '30%'}}>Toggler</div>
             </div>
-            <div className="player__time-value">1:30:29</div>
+            <div className="player__time-value">{duration}</div>
           </div>
 
           <div className="player__controls-row">

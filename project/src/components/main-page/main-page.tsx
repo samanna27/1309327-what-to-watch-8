@@ -1,22 +1,16 @@
 import React from 'react';
-import SmallFilmCard from '../small-film-card/small-film-card';
 import Logo from '../logo/logo';
-
-let i = 1;
-const FILM_CARD_COUNT = new Array(20).fill('').map((index) => {
-  index = i;
-  i++;
-
-  return index;
-});
+import FilmsListComponent from '../films-list-component/films-list-component';
+import { Film } from '../../types/film';
 
 type MainPageProps = {
   promoFilmTitle: string;
   promoFilmGenre: string;
   promoFilmDate: number;
+  films: Film[];
 }
 
-function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate}: MainPageProps): JSX.Element {
+function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPageProps): JSX.Element {
   return (
     <React.Fragment>
       <section className="film-card">
@@ -110,13 +104,7 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate}: MainPageProps
             </li>
           </ul>
 
-          <div className="catalog__films-list">
-            {
-              FILM_CARD_COUNT.map((index) => (
-                <SmallFilmCard key={index}/>
-              ))
-            }
-          </div>
+          {<FilmsListComponent films={films} />}
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>
