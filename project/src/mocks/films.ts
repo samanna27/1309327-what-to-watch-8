@@ -44,6 +44,7 @@ const filmsMock: Film = {
 
 export const films = new Array(20).fill('').map((index) => {
   index=filmsMock;
+  filmsMock.id=nanoid();
 
   return index;
 });
