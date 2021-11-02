@@ -1,5 +1,6 @@
 import Logo from '../logo/logo';
 import { Film } from '../../types/film';
+import Tabs from '../tabs/tabs';
 
 type FilmScreenProps = {
   films: Film[];
@@ -7,8 +8,8 @@ type FilmScreenProps = {
 
 function FilmScreen({films}: FilmScreenProps):JSX.Element {
   const firstFilm = films[0];
-  const { id, poster, title, bigPoster, genre, releaseDate, overview, director, actors } = firstFilm;
-  const { description } = overview;
+  const { id, poster, title, bigPoster, genre, releaseDate } = firstFilm;
+  // const { description } = overview;
 
   return (
     <>
@@ -100,7 +101,9 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
               <img src={poster} alt="The Grand Budapest Hotel poster" width="218" height="327" />
             </div>
 
-            <div className="film-card__desc">
+            <Tabs film={firstFilm} />
+
+            {/* <div className="film-card__desc">
               <nav className="film-nav film-card__nav">
                 <ul className="film-nav__list">
                   <li className="film-nav__item film-nav__item--active">
@@ -130,7 +133,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
 
                 <p className="film-card__starring"><strong>Starring: {actors} and other</strong></p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
