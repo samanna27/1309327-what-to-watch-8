@@ -4,7 +4,7 @@ import { films } from '../mocks/films';
 
 const initialState = {
   genre: 'All genres',
-  filmList: [],
+  filmList: films,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -13,6 +13,8 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {...state };
     case ActionType.FilmList:
       return {...state, filmList: films };
+    case ActionType.ResetFilmList:
+      return {...initialState};
     default:
       return state;
   }

@@ -1,6 +1,7 @@
 export enum ActionType {
   GenreChange = 'main/genreChange',
   FilmList = 'main/FilmList',
+  ResetFilmList = 'main/ResetFilmList',
 }
 
 export type GenreChangeAction = {
@@ -12,4 +13,8 @@ export type FilmListAction = {
   type: ActionType.FilmList;
 };
 
-export type Actions = GenreChangeAction | FilmListAction;
+export type ResetFilmListAction = {
+  type: ActionType.ResetFilmList;
+};
+
+export type Actions = GenreChangeAction | FilmListAction | ResetFilmListAction;

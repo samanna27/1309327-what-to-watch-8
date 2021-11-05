@@ -1,6 +1,6 @@
 import React from 'react';
 import Logo from '../logo/logo';
-import FilmsListComponent from '../films-list-component/films-list-component';
+import GenresList from '../genres-list/genres-list';
 import { Film } from '../../types/film';
 
 type MainPageProps = {
@@ -11,10 +11,6 @@ type MainPageProps = {
 }
 
 function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPageProps): JSX.Element {
-  const renderFilteredFilms = (value: string | null)=>(
-    // const value=(e.target as Element).textContent;
-    <FilmsListComponent films={films.filter((film) => film.genre === value)} />);
-
   return (
     <React.Fragment>
       <section className="film-card">
@@ -75,49 +71,7 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <ul className="catalog__genres-list">
-            <li className="catalog__genres-item catalog__genres-item--active">
-              {/* <button className="catalog__genres-link">All genres</button> */}
-              <a href="#" className="catalog__genres-link" onClick={() => <FilmsListComponent films={films} />}>All genres</a>
-            </li>
-            <li className="catalog__genres-item">
-              {/* <button className="catalog__genres-link">Comedies</button> */}
-              <a href="#" className="catalog__genres-link" onClick={(e) => {
-                const value=(e.target as Element).textContent;
-                renderFilteredFilms(value);
-              }}
-              >
-                Comedies
-              </a>
-
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Crime</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Documentary</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Dramas</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Horror</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Kids & Family</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Romance</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Sci-Fi</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Thrillers</button>
-            </li>
-          </ul>
-
-          {<FilmsListComponent films={films} />}
+          <GenresList films={films} />
 
           <div className="catalog__more">
             <button className="catalog__button" type="button">Show more</button>

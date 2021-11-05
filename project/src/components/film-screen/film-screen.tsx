@@ -112,7 +112,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__films-list">
-            {films.filter((film) => film.genre === firstFilm.genre).slice(0,4).map((film) => (<SmallFilmCard key={film.id} film={film}/>))}
+            {films.slice().filter((film) => film.genre === firstFilm.genre).slice(0,4).map((film) => (<SmallFilmCard key={film.id} film={film}/>))}
           </div>
         </section>
 
