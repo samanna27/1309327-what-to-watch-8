@@ -11,6 +11,10 @@ type MainPageProps = {
 }
 
 function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPageProps): JSX.Element {
+  const renderFilteredFilms = (value: string | null)=>(
+    // const value=(e.target as Element).textContent;
+    <FilmsListComponent films={films.filter((film) => film.genre === value)} />);
+
   return (
     <React.Fragment>
       <section className="film-card">
@@ -73,10 +77,19 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
 
           <ul className="catalog__genres-list">
             <li className="catalog__genres-item catalog__genres-item--active">
-              <button className="catalog__genres-link">All genres</button>
+              {/* <button className="catalog__genres-link">All genres</button> */}
+              <a href="#" className="catalog__genres-link" onClick={() => <FilmsListComponent films={films} />}>All genres</a>
             </li>
             <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Comedies</button>
+              {/* <button className="catalog__genres-link">Comedies</button> */}
+              <a href="#" className="catalog__genres-link" onClick={(e) => {
+                const value=(e.target as Element).textContent;
+                renderFilteredFilms(value);
+              }}
+              >
+                Comedies
+              </a>
+
             </li>
             <li className="catalog__genres-item">
               <button className="catalog__genres-link">Crime</button>
