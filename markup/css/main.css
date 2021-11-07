@@ -1409,3 +1409,7 @@ main {
   top: 50%;
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%); }
+
+.your-loader {
+  @include loader09($size: 10px, $height: 48px, $gap: 8px, $duration: 1s, $align: middle);
+}

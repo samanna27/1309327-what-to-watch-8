@@ -38,3 +38,9 @@ export const GENRES = [
   'Sci-Fi',
   'Thrillers',
 ];
+
+export enum APIRoute {
+  Films = '/films',
+  Login = '/login',
+  Logout = '/logout',
+}

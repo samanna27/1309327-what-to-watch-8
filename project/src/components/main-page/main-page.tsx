@@ -2,6 +2,7 @@ import React from 'react';
 import Logo from '../logo/logo';
 import GenresList from '../genres-list/genres-list';
 import { Film } from '../../types/film';
+import ShowMoreButton from '../show-more-button/show-more-button';
 
 type MainPageProps = {
   promoFilmTitle: string;
@@ -71,11 +72,9 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <GenresList films={films} />
-
-          <div className="catalog__more">
-            <button className="catalog__button" type="button">Show more</button>
-          </div>
+          <GenresList/>
+          {/* <GenresList films={films} /> */}
+          <ShowMoreButton films={films} />
         </section>
 
         <footer className="page-footer">

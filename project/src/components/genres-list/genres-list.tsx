@@ -1,4 +1,4 @@
-import { Film } from '../../types/film';
+// import { Film } from '../../types/film';
 import { GENRES } from '../../const';
 // import { useState } from 'react';
 import FilmsListComponent from '../films-list-component/films-list-component';
@@ -10,12 +10,13 @@ import {Actions} from '../../types/action';
 
 
 type GenresListProps = {
-  films: Film[];
+  // films: Film[];
 }
 
-const mapStateToProps = ({genre, filmList}: State) => ({
+const mapStateToProps = ({genre, filmList, films}: State) => ({
   genre,
   filmList,
+  films,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
@@ -28,7 +29,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & GenresListProps;
 
 function GenresList(props: ConnectedComponentProps):JSX.Element {
-  const { filmList, onGenreClick} = props;
+  const { films, onGenreClick} = props;
   // const [isInitialFilmList, setInitialFilmList] = useState(true);
   // const [isFilteredFilmList, setFilteredFilmList] = useState(false);
   // let filteredFilms = films.slice();
@@ -51,14 +52,14 @@ function GenresList(props: ConnectedComponentProps):JSX.Element {
 
         {GENRES.map((genre)=>(
           <li key={genre} className="catalog__genres-item">
-            <a href="#" className="catalog__genres-link" onClick={() => onGenreClick(GENRES.indexOf(genre))}>{genre}</a>
+            <a href="#" className="catalog__genres-link" onClick={() => onGenreClick(genre)}>{genre}</a>
           </li>
         ))}
       </ul>
 
       {/* {isInitialFilmList && <FilmsListComponent films={films} />} */}
       {/* {isFilteredFilmList && <FilmsListComponent films={filmList} />} */}
-      <FilmsListComponent films={filmList} />
+      <FilmsListComponent films={films.slice()} />
       {/* {document.querySelector('.catalog__genres-item')? null: document.querySelector('.catalog__genres-item').classList.add('catalog__genres-item--active')} */}
     </>
   );
