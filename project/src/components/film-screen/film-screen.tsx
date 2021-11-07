@@ -1,5 +1,7 @@
 import Logo from '../logo/logo';
 import { Film } from '../../types/film';
+import SmallFilmCard from '../small-film-card/small-film-card';
+import Tabs from '../tabs/tabs';
 
 type FilmScreenProps = {
   films: Film[];
@@ -7,8 +9,8 @@ type FilmScreenProps = {
 
 function FilmScreen({films}: FilmScreenProps):JSX.Element {
   const firstFilm = films[0];
-  const { id, poster, title, bigPoster, genre, releaseDate, overview, director, actors } = firstFilm;
-  const { description } = overview;
+  const { id, poster, title, bigPoster, genre, releaseDate } = firstFilm;
+  // const { description } = overview;
 
   return (
     <>
@@ -100,37 +102,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
               <img src={poster} alt="The Grand Budapest Hotel poster" width="218" height="327" />
             </div>
 
-            <div className="film-card__desc">
-              <nav className="film-nav film-card__nav">
-                <ul className="film-nav__list">
-                  <li className="film-nav__item film-nav__item--active">
-                    <button className="film-nav__link">Overview</button>
-                  </li>
-                  <li className="film-nav__item">
-                    <button className="film-nav__link">Details</button>
-                  </li>
-                  <li className="film-nav__item">
-                    <button className="film-nav__link">Reviews</button>
-                  </li>
-                </ul>
-              </nav>
-
-              <div className="film-rating">
-                <div className="film-rating__score">8,9</div>
-                <p className="film-rating__meta">
-                  <span className="film-rating__level">Very good</span>
-                  <span className="film-rating__count">240 ratings</span>
-                </p>
-              </div>
-
-              <div className="film-card__text">
-                <p style={{whiteSpace: 'pre-line'}}>{description}</p>
-
-                <p className="film-card__director"><strong>Director: {director}</strong></p>
-
-                <p className="film-card__starring"><strong>Starring: {actors} and other</strong></p>
-              </div>
-            </div>
+            <Tabs film={firstFilm} />
           </div>
         </div>
       </section>
@@ -140,7 +112,8 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__films-list">
-            <article className="small-film-card catalog__films-card">
+            {films.filter((film) => film.genre === firstFilm.genre).slice(0,4).map((film) => (<SmallFilmCard key={film.id} film={film}/>))}
+            {/* <article className="small-film-card catalog__films-card">
               <div className="small-film-card__image">
                 <img src="img/fantastic-beasts-the-crimes-of-grindelwald.jpg" alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175" />
               </div>
@@ -174,7 +147,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
               <h3 className="small-film-card__title">
                 <a className="small-film-card__link" href="film-page.html">Aviator</a>
               </h3>
-            </article>
+            </article> */}
           </div>
         </section>
 

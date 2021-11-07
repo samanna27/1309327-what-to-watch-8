@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import VideoPlayer from '../video-player/video-player';
 import { useState } from 'react';
 
-type SmallFilmCardtProps = {
+type SmallFilmCardProps = {
   film: Film;
 }
 
-function SmallFilmCard({film}: SmallFilmCardtProps):JSX.Element {
+function SmallFilmCard({film}: SmallFilmCardProps):JSX.Element {
   const { id, title } = film;
   const [isPlaying, setIsPlaying] = useState(true);
   return (
