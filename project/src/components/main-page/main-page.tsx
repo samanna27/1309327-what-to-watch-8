@@ -1,7 +1,8 @@
 import React from 'react';
 import Logo from '../logo/logo';
-import FilmsListComponent from '../films-list-component/films-list-component';
+import GenresList from '../genres-list/genres-list';
 import { Film } from '../../types/film';
+import ShowMoreButton from '../show-more-button/show-more-button';
 
 type MainPageProps = {
   promoFilmTitle: string;
@@ -71,44 +72,9 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <ul className="catalog__genres-list">
-            <li className="catalog__genres-item catalog__genres-item--active">
-              <button className="catalog__genres-link">All genres</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Comedies</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Crime</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Documentary</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Dramas</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Horror</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Kids & Family</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Romance</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Sci-Fi</button>
-            </li>
-            <li className="catalog__genres-item">
-              <button className="catalog__genres-link">Thrillers</button>
-            </li>
-          </ul>
-
-          {<FilmsListComponent films={films} />}
-
-          <div className="catalog__more">
-            <button className="catalog__button" type="button">Show more</button>
-          </div>
+          <GenresList/>
+          {/* <GenresList films={films} /> */}
+          <ShowMoreButton films={films} />
         </section>
 
         <footer className="page-footer">

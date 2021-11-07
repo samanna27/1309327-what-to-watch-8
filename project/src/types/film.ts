@@ -30,3 +30,4 @@ reviews: FilmReview[];
 };
 
 export type ReviewStarRating = readonly boolean[];
+export type Genre = string;
