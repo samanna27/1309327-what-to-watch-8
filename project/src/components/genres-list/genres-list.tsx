@@ -1,22 +1,22 @@
 // import { Film } from '../../types/film';
-import { GENRES } from '../../const';
-// import { useState } from 'react';
+import { GENRES, FILM_CARD_COUNT_PER_STEP } from '../../const';
 import FilmsListComponent from '../films-list-component/films-list-component';
 import {bindActionCreators, Dispatch} from 'redux';
 import {connect, ConnectedProps} from 'react-redux';
 import {provideFilmList} from '../../store/action';
 import {State} from '../../types/state';
 import {Actions} from '../../types/action';
-
+import ShowMoreButton from '../show-more-button/show-more-button';
 
 type GenresListProps = {
   // films: Film[];
 }
 
-const mapStateToProps = ({genre, filmList, films}: State) => ({
+const mapStateToProps = ({genre, filmList, films, renderedFilms}: State) => ({
   genre,
   filmList,
   films,
+  renderedFilms,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
@@ -29,22 +29,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & GenresListProps;
 
 function GenresList(props: ConnectedComponentProps):JSX.Element {
-  const { films, onGenreClick} = props;
-  // const [isInitialFilmList, setInitialFilmList] = useState(true);
-  // const [isFilteredFilmList, setFilteredFilmList] = useState(false);
-  // let filteredFilms = films.slice();
-
-  // const renderFilteredFilms = (value: number)=>{
-  //   document.querySelectorAll('.catalog__genres-item').forEach((element) => element.classList.remove('catalog__genres-item--active'));
-  //   document.querySelectorAll('.catalog__genres-item')[value].classList.add('catalog__genres-item--active');
-  //   if(value===0) {
-  //     setInitialFilmList((prevState) => true);
-  //     setFilteredFilmList((prevState) => false);
-  //   } else {
-  //     setInitialFilmList((prevState) => false);
-  //     setFilteredFilmList((prevState) => true);
-  //     filteredFilms = films.slice().filter((film) => film.genre === GENRES[value]);
-  //   }};
+  const { filmList, onGenreClick} = props;
+  const filmCount = filmList.length;
+  let renderedFilms = 0;
 
   return (
     <>
@@ -57,9 +44,9 @@ function GenresList(props: ConnectedComponentProps):JSX.Element {
         ))}
       </ul>
 
-      {/* {isInitialFilmList && <FilmsListComponent films={films} />} */}
-      {/* {isFilteredFilmList && <FilmsListComponent films={filmList} />} */}
-      <FilmsListComponent films={films.slice()} />
+      {renderedFilms < filmCount? renderedFilms += FILM_CARD_COUNT_PER_STEP: renderedFilms=filmCount}
+      <FilmsListComponent films={filmList.slice(0, renderedFilms)} />
+      {renderedFilms === filmCount ? null: <ShowMoreButton renderedFilms={renderedFilms} filmCount={filmCount} filmList={filmList}/>}
       {/* {document.querySelector('.catalog__genres-item')? null: document.querySelector('.catalog__genres-item').classList.add('catalog__genres-item--active')} */}
     </>
   );

@@ -7,4 +7,5 @@ export type State = {
   films: Film[],
   authorizationStatus: AuthorizationStatus,
   isDataLoaded: boolean,
+  renderedFilms: number,
 };
