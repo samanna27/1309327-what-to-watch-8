@@ -29,7 +29,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & GenresListProps;
 
 function GenresList(props: ConnectedComponentProps):JSX.Element {
-  const { filmList, onGenreClick} = props;
+  const { filmList, films, onGenreClick} = props;
   const filmCount = filmList.length;
   let renderedFilms = 0;
 
@@ -45,7 +45,7 @@ function GenresList(props: ConnectedComponentProps):JSX.Element {
       </ul>
 
       {renderedFilms < filmCount? renderedFilms += FILM_CARD_COUNT_PER_STEP: renderedFilms=filmCount}
-      <FilmsListComponent films={filmList.slice(0, renderedFilms)} />
+      <FilmsListComponent films={films.slice(0, renderedFilms)} />
       {renderedFilms === filmCount ? null: <ShowMoreButton renderedFilms={renderedFilms} filmCount={filmCount} filmList={filmList}/>}
       {/* {document.querySelector('.catalog__genres-item')? null: document.querySelector('.catalog__genres-item').classList.add('catalog__genres-item--active')} */}
     </>

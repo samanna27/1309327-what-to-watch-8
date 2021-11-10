@@ -1,16 +1,37 @@
+import {Link} from 'react-router-dom';
+import {connect, ConnectedProps} from 'react-redux';
 import React from 'react';
 import Logo from '../logo/logo';
 import GenresList from '../genres-list/genres-list';
-import { Film } from '../../types/film';
+// import { Film } from '../../types/film';
+import {ThunkAppDispatch} from '../../types/action';
+import {logoutAction} from '../../store/api-actions';
+// import {store} from '../../index';
 
 type MainPageProps = {
   promoFilmTitle: string;
   promoFilmGenre: string;
   promoFilmDate: number;
-  films: Film[];
+  // films: Film[];
 }
 
-function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPageProps): JSX.Element {
+const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
+  requireLogout() {
+    dispatch(logoutAction());
+  },
+});
+
+const connector = connect(mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & MainPageProps;
+
+// const films = store.subscribe(()=>{
+//   const state = store.getState();
+//   return state.films;
+// });
+
+function MainPage(props: ConnectedComponentProps): JSX.Element {
+  const {promoFilmTitle, promoFilmGenre, promoFilmDate, requireLogout}=props;
 
   return (
     <React.Fragment>
@@ -31,7 +52,18 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
               </div>
             </li>
             <li className="user-block__item">
-              <button className="user-block__link">Sign out</button>
+              {/* <button className="user-block__link">Sign out</button> */}
+              <Link
+                className="user-block__link"
+                onClick={(evt) => {
+                  evt.preventDefault();
+
+                  requireLogout();
+                }}
+                to='/'
+              >
+                Sign out
+              </Link>
             </li>
           </ul>
         </header>
@@ -72,7 +104,8 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <GenresList/>
+          <GenresList  />
+          {/* <GenresList films={store.getState().films} /> */}
         </section>
 
         <footer className="page-footer">
@@ -93,4 +126,5 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
   );
 }
 
-export default MainPage;
+export {MainPage};
+export default connector(MainPage);

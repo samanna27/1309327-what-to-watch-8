@@ -1,5 +1,5 @@
 import {connect, ConnectedProps} from 'react-redux';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, Router as BrowserRouter } from 'react-router-dom';
 import MainPage from '../main-page/main-page';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import SignInScreen from '../sign-in-screen/sign-in-screen';
@@ -12,6 +12,7 @@ import PrivateRoute from '../private-route/private-route';
 import {Film} from '../../types/film';
 import LoadingScreen from '../loading-screen/loading-screen';
 import {State} from '../../types/state';
+import browserHistory from '../../browser-history';
 
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
@@ -43,11 +44,12 @@ function App(props: ConnectedComponentProps): JSX.Element {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter history={browserHistory}>
       <Switch>
         <Route exact path={AppRoute.Main}>
           <MainPage
-            promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate} films={films}
+            promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate}
+            // promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate} films={films}
           />
         </Route>
         <Route exact path={AppRoute.SignIn}>
@@ -57,7 +59,6 @@ function App(props: ConnectedComponentProps): JSX.Element {
           exact
           path={AppRoute.MyList}
           render={()=><MyListScreen films={films}/>}
-          authorizationStatus={AuthorizationStatus.NoAuth}
         >
         </PrivateRoute>
         <Route exact path={AppRoute.Player}>

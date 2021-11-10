@@ -1,7 +1,7 @@
 import {ThunkActionResult} from '../types/action';
-import {loadFilms, requireAuthorization, requireLogout} from './action';
+import {loadFilms, redirectToRoute, requireAuthorization, requireLogout} from './action';
 import {saveToken, dropToken, Token} from '../services/token';
-import {APIRoute, AuthorizationStatus} from '../const';
+import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
 import {Film} from '../types/film';
 import {AuthData} from '../types/auth-data';
 
@@ -16,6 +16,7 @@ export const checkAuthAction = (): ThunkActionResult =>
     await api.get(APIRoute.Login)
       .then(() => {
         dispatch(requireAuthorization(AuthorizationStatus.Auth));
+        dispatch(redirectToRoute(AppRoute.Main));
       });
   };
 
