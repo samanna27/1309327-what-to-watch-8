@@ -2,7 +2,6 @@ import React from 'react';
 import Logo from '../logo/logo';
 import GenresList from '../genres-list/genres-list';
 import { Film } from '../../types/film';
-import ShowMoreButton from '../show-more-button/show-more-button';
 
 type MainPageProps = {
   promoFilmTitle: string;
@@ -12,6 +11,7 @@ type MainPageProps = {
 }
 
 function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPageProps): JSX.Element {
+
   return (
     <React.Fragment>
       <section className="film-card">
@@ -73,8 +73,6 @@ function MainPage({promoFilmTitle, promoFilmGenre, promoFilmDate, films}: MainPa
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
           <GenresList/>
-          {/* <GenresList films={films} /> */}
-          <ShowMoreButton films={films} />
         </section>
 
         <footer className="page-footer">

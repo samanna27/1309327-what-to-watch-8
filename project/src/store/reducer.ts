@@ -9,6 +9,7 @@ const initialState = {
   films: [],
   authorizationStatus: AuthorizationStatus.Unknown,
   isDataLoaded: false,
+  renderedFilms: 0,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -17,13 +18,15 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {...state };
     case ActionType.ProvideFilmList:{
       const genre = state.genre;
+      let renderedFilms = state.renderedFilms;
       if (genre==='All genres') {
         return {
           ...initialState,
         };
       }
       const filmList = state.filmList.slice().filter((film) => film.genre === genre);
-      return {...state, filmList};
+      renderedFilms = 0;
+      return {...state, filmList, renderedFilms};
     }
     case ActionType.LoadFilms: {
       const {films} = action.payload;
