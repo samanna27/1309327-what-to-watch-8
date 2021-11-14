@@ -4,11 +4,12 @@ import {saveToken, dropToken, Token} from '../services/token';
 import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
 import {Film} from '../types/film';
 import {AuthData} from '../types/auth-data';
+import {adaptToClient} from '../components/adaptor/adaptor';
 
 export const fetchFilmAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const {data} = await api.get<Film[]>(APIRoute.Films);
-    dispatch(loadFilms(data));
+    dispatch(loadFilms(adaptToClient(data)));
   };
 
 export const checkAuthAction = (): ThunkActionResult =>

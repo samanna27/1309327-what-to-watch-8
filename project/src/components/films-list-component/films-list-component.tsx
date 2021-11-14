@@ -6,12 +6,11 @@ type FilmListProps = {
 }
 
 function FilmsListComponent({films}: FilmListProps): JSX.Element {
-  const filmsList=films;
 
   return (
     <div className="catalog__films-list">
       {
-        filmsList.map((film) => (
+        films.map((film) => (
           <SmallFilmCard key={film.id} film={film}/>
         ))
       }

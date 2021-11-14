@@ -16,6 +16,7 @@ export type Film = {
   id: string;
   poster: string;
   preview: string;
+  previewImage: string;
   title: string;
   bigPoster: string;
   genre: string;
@@ -24,9 +25,9 @@ export type Film = {
   director: string;
   actors: string;
   duration: string;
-addedToWatchList: boolean;
-overview: FilmOverview;
-reviews: FilmReview[];
+  addedToWatchList: boolean;
+  overview: FilmOverview;
+  reviews: FilmReview[];
 };
 
 export type ReviewStarRating = readonly boolean[];

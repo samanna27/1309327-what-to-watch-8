@@ -23,7 +23,7 @@ export enum ActionType {
   LoadFilms = 'data/loadFilms',
   RequireAuthorization = 'user/requireAuthorization',
   RequireLogout = 'user/requireLogout',
-  RedirectToRoute = 'game/redirectToRoute'
+  RedirectToRoute = 'main/redirectToRoute'
 }
 
 export type Actions =

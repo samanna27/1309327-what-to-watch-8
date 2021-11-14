@@ -13,6 +13,7 @@ import {Film} from '../../types/film';
 import LoadingScreen from '../loading-screen/loading-screen';
 import {State} from '../../types/state';
 import browserHistory from '../../browser-history';
+// import {adaptToClient} from '../adaptor/adaptor';
 
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
@@ -49,7 +50,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
         <Route exact path={AppRoute.Main}>
           <MainPage
             promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate}
-            // promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate} films={films}
+            // promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate} films={films.map((film)=>adaptToClient(film))}
           />
         </Route>
         <Route exact path={AppRoute.SignIn}>

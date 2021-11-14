@@ -5,6 +5,7 @@ const filmsMock: Film = {
   id: nanoid(),
   poster: 'img/the-grand-budapest-hotel-poster.jpg',
   preview: 'https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Big_Buck_Bunny_Trailer_400p.ogv/Big_Buck_Bunny_Trailer_400p.ogv.360p.webm',
+  previewImage: 'img/the-grand-budapest-hotel.jpg',
   title: 'The Grand Budapest Hotel',
   bigPoster: 'img/bg-the-grand-budapest-hotel.jpg',
   genre: 'Drama',
