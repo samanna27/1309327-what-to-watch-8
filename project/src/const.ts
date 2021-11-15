@@ -13,18 +13,18 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN',
 }
 
-// export const GENRES = [
-//   AllGenres: 'All genres',
-//   Comedies: 'Comedy',
-//   Crime: 'Crime',
-//   Documentary: 'Documentary',
-//   Dramas: 'Drama',
-//   Horror: 'Horror',
-//   KidsAndFamily: 'Kids & Family',
-//   Romance: 'Romance',
-//   SciFi: 'Sci-Fi',
-//   Thrillers: 'Thriller',
-// ];
+export const FILM_GENRES = {
+  'All genres': 'All genres',
+  'Comedies': 'Comedy',
+  'Crime': 'Crime',
+  'Documentary': 'Documentary',
+  'Dramas': 'Drama',
+  'Horror': 'Horror',
+  'Kids & Family': 'Kids & Family',
+  'Romance': 'Romance',
+  'Sci-Fi': 'Sci-Fi',
+  'Thrillers': 'Thriller',
+};
 
 export const GENRES = [
   'All genres',
@@ -41,6 +41,9 @@ export const GENRES = [
 
 export enum APIRoute {
   Films = '/films',
+  Film = 'films/: id',
+  SimilarFilms = 'films/: id/similar',
+  Comments = 'comments/: film_id',
   Login = '/login',
   Logout = '/logout',
 }

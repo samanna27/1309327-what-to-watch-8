@@ -30,6 +30,8 @@ const PromoFilmData = {
   PROMO_FILM_DATE: 2014,
 };
 
+// const genre = '' as keyof typeof FILM_GENRES;
+
 export const store = createStore(
   reducer,
   composeWithDevTools(

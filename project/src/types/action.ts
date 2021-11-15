@@ -11,6 +11,10 @@ import {
   provideFilmList,
   resetFilmList,
   loadFilms,
+  loadFilmData,
+  loadSimilarFilms,
+  loadComments,
+  addComment,
   requireAuthorization,
   requireLogout,
   redirectToRoute
@@ -21,6 +25,10 @@ export enum ActionType {
   ProvideFilmList = 'main/ProvideFilmList',
   ResetFilmList = 'main/ResetFilmList',
   LoadFilms = 'data/loadFilms',
+  LoadFilmData = 'data/loadFilmData',
+  LoadSimilarFilms = 'data/loadSimilarFilms',
+  LoadComments = 'data/loadComments',
+  AddComment = 'data/addComment',
   RequireAuthorization = 'user/requireAuthorization',
   RequireLogout = 'user/requireLogout',
   RedirectToRoute = 'main/redirectToRoute'
@@ -31,6 +39,10 @@ export type Actions =
  | ReturnType<typeof provideFilmList>
  | ReturnType<typeof resetFilmList>
  | ReturnType<typeof loadFilms>
+ | ReturnType<typeof loadFilmData>
+ | ReturnType<typeof loadSimilarFilms>
+ | ReturnType<typeof loadComments>
+ | ReturnType<typeof addComment>
  | ReturnType<typeof requireAuthorization>
  | ReturnType<typeof requireLogout>
  | ReturnType<typeof redirectToRoute>;

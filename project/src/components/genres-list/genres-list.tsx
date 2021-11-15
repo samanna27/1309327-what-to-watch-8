@@ -7,7 +7,6 @@ import {provideFilmList} from '../../store/action';
 import {State} from '../../types/state';
 import {Actions} from '../../types/action';
 import ShowMoreButton from '../show-more-button/show-more-button';
-import {adaptToClient} from '../adaptor/adaptor';
 
 type GenresListProps = {
   // films: Film[];
@@ -47,7 +46,7 @@ function GenresList(props: ConnectedComponentProps):JSX.Element {
 
       {renderedFilms < filmCount? renderedFilms += FILM_CARD_COUNT_PER_STEP: renderedFilms=filmCount}
       {/* <FilmsListComponent films={films} /> */}
-      <FilmsListComponent films={films.slice(0, renderedFilms).map((film) => (adaptToClient(film)))} />
+      <FilmsListComponent films={filmList.slice(0, renderedFilms)} />
       {renderedFilms === filmCount ? null: <ShowMoreButton renderedFilms={renderedFilms} filmCount={filmCount} filmList={filmList}/>}
       {/* {document.querySelector('.catalog__genres-item')? null: document.querySelector('.catalog__genres-item').classList.add('catalog__genres-item--active')} */}
     </>

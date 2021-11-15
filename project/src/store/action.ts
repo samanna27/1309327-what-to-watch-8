@@ -1,5 +1,5 @@
 import {ActionType} from '../types/action';
-import {Film, Genre} from '../types/film';
+import {Film, Genre, FilmReview} from '../types/film';
 import {AppRoute, AuthorizationStatus} from '../const';
 
 export const genreChange = (genre: Genre) => ({
@@ -20,6 +20,34 @@ export const loadFilms = (films: Film[]) => ({
   type: ActionType.LoadFilms,
   payload: {
     films,
+  },
+} as const);
+
+export const loadFilmData = (film: Film) => ({
+  type: ActionType.LoadFilmData,
+  payload: {
+    film,
+  },
+} as const);
+
+export const loadSimilarFilms = (similarFilms: Film[]) => ({
+  type: ActionType.LoadSimilarFilms,
+  payload: {
+    similarFilms,
+  },
+} as const);
+
+export const loadComments = (comments: FilmReview[]) => ({
+  type: ActionType.LoadComments,
+  payload: {
+    comments,
+  },
+} as const);
+
+export const addComment = (comment: FilmReview) => ({
+  type: ActionType.AddComment,
+  payload: {
+    comment,
   },
 } as const);
 

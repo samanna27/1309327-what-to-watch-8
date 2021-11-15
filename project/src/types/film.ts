@@ -6,8 +6,8 @@ export type FilmOverview = {
 }
 
 export type FilmReview = {
-  text: string;
-  rate: number;
+  text?: string;
+  rate?: number;
   userName: string;
   reviewDate: string;
 }
