@@ -48,18 +48,18 @@ function GenresList(props: ConnectedComponentProps):JSX.Element {
               const index = Object.values(FILM_GENRES).indexOf(genre);
               const genreNotation = Object.keys(FILM_GENRES)[index];
               onGenreClick(genreNotation);}}
+              // TODO!!! здесь должен срабатывать Action на фильтрацию по жанру и копированию отфильтрованного массива фильмов в FilmList в Store. В дальнейшем FilmList должен обновляться в компоненте FilmList Component для отображения списка по выбранному жанру. Не работает.
             >
               {genre}
             </Link>
           </li>
         ))}
       </ul>
-
+      {/* {document.querySelector('.catalog__genres-item')? null: document.querySelector('.catalog__genres-item').classList.add('catalog__genres-item--active')} */}
+{/* TODO!!! Ожидала, что код предыдущей строки будет добавлять класс в тег li, чтобы отображался стиль подчеркивания выбранного фильра по жанру, но код не работает. Пока что закоментировала. */}
       {renderedFilms < filmCount? renderedFilms += FILM_CARD_COUNT_PER_STEP: renderedFilms=filmCount}
-      {/* <FilmsListComponent films={films} /> */}
       <FilmsListComponent films={filmList.slice(0, renderedFilms)} film={film} similarFilms={similarFilms} comments={comments} onSmallFilmCardClick={onSmallFilmCardClick}/>
       {renderedFilms === filmCount ? null: <ShowMoreButton renderedFilms={renderedFilms} filmCount={filmCount} filmList={filmList}/>}
-      {/* {document.querySelector('.catalog__genres-item')? null: document.querySelector('.catalog__genres-item').classList.add('catalog__genres-item--active')} */}
     </>
   );
 }

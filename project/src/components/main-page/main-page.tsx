@@ -3,16 +3,13 @@ import {connect, ConnectedProps} from 'react-redux';
 import React from 'react';
 import Logo from '../logo/logo';
 import GenresList from '../genres-list/genres-list';
-// import { Film } from '../../types/film';
 import {ThunkAppDispatch} from '../../types/action';
 import {logoutAction} from '../../store/api-actions';
-// import {store} from '../../index';
 
 type MainPageProps = {
   promoFilmTitle: string;
   promoFilmGenre: string;
   promoFilmDate: number;
-  // films: Film[];
 }
 
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
@@ -24,11 +21,6 @@ const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
 const connector = connect(mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & MainPageProps;
-
-// const films = store.subscribe(()=>{
-//   const state = store.getState();
-//   return state.films;
-// });
 
 function MainPage(props: ConnectedComponentProps): JSX.Element {
   const {promoFilmTitle, promoFilmGenre, promoFilmDate, requireLogout}=props;
@@ -52,7 +44,6 @@ function MainPage(props: ConnectedComponentProps): JSX.Element {
               </div>
             </li>
             <li className="user-block__item">
-              {/* <button className="user-block__link">Sign out</button> */}
               <Link
                 className="user-block__link"
                 onClick={(evt) => {
@@ -105,7 +96,6 @@ function MainPage(props: ConnectedComponentProps): JSX.Element {
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
           <GenresList />
-          {/* <GenresList films={store.getState().films} /> */}
         </section>
 
         <footer className="page-footer">

@@ -15,8 +15,6 @@ import {State} from '../../types/state';
 import browserHistory from '../../browser-history';
 import {loadFilmData} from '../../store/action';
 
-// import {adaptToClient} from '../adaptor/adaptor';
-
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
@@ -55,7 +53,6 @@ function App(props: ConnectedComponentProps): JSX.Element {
         <Route exact path={AppRoute.Main}>
           <MainPage
             promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate}
-            // promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate} films={films.map((film)=>adaptToClient(film))}
           />
         </Route>
         <Route exact path={AppRoute.SignIn}>
@@ -72,6 +69,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
         </Route>
         <Route exact path={AppRoute.Film}>
           <FilmScreen films={films} film={film} similarFilms={similarFilms} comments={comments} onSmallFilmCardClick={onSmallFilmCardClick} />
+{/*  TODO!!!! мне нужно здесь прокидывать пропсы, которые будут использованы в компоненте FilmScreen и его дочерних компонентах- similarFilms, comments? я думаю, что они должны напрямую из стора в компонент попадать. */}
         </Route>
         <Route exact path={AppRoute.AddReview}>
           <AddReviewScreen films={films}

@@ -18,6 +18,8 @@ type SmallFilmCardProps = {
 (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction());
 (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction());
 (store.dispatch as ThunkAppDispatch)(fetchCommentsAction());
+// TODO!!! вот отсюда все началось. Я хотела по клику в этом компоненте загрузить данные по similarFilms, comments и отдать в FilmScreen компонент для дальнейшей отрисовки. Добавила соответствующие пропсы в mapStateToProps
+// После этого eslint начал ругаться на эти типы и их протаскивание через компоненты.
 
 const mapStateToProps = ({film, similarFilms, comments}: State) => ({
   film,
@@ -28,6 +30,7 @@ const mapStateToProps = ({film, similarFilms, comments}: State) => ({
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
   onSmallFilmCardClick: loadFilmData,
 }, dispatch);
+// TODO!!! этот обработчик хочу вообще удалить, мне не нужна инфа по отдельному фильму, она вся у меня в массиве фильмов содержится. А загрузку similarFilms данных лучше сделать в Film-screen компоненте, а комментариев вообще в film-review.
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -45,6 +48,7 @@ function SmallFilmCard({film, onSmallFilmCardClick}: ConnectedComponentProps):JS
         onFilmCardFocus={() => setIsPlaying(isPlaying)}
         onFilmCardBlur={() => setIsPlaying(!isPlaying)}
       />
+      {/* TODO!!! задание у меня по видео-плееру приняли, но когда я навожу мышку на постер, у меня почему-то не проигрывается превью... */}
       <h3 className="small-film-card__title">
         <Link to={`/films/${id}`} className="small-film-card__link" onClick={()=>(onSmallFilmCardClick(film))}>{title}</Link>
       </h3>
