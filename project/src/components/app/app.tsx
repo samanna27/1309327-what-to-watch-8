@@ -13,14 +13,20 @@ import {Film} from '../../types/film';
 import LoadingScreen from '../loading-screen/loading-screen';
 import {State} from '../../types/state';
 import browserHistory from '../../browser-history';
+import {loadFilmData} from '../../store/action';
+
 // import {adaptToClient} from '../adaptor/adaptor';
 
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
-const mapStateToProps = ({authorizationStatus, isDataLoaded}: State) => ({
+const mapStateToProps = ({authorizationStatus, isDataLoaded, film, similarFilms, comments}: State) => ({
   authorizationStatus,
   isDataLoaded,
+  film,
+  similarFilms,
+  comments,
+  onSmallFilmCardClick: loadFilmData,
 });
 
 const connector = connect(mapStateToProps);
@@ -34,9 +40,8 @@ type AppScreenProps = {
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & AppScreenProps;
 
-
 function App(props: ConnectedComponentProps): JSX.Element {
-  const {promoFilmTitle, promoFilmGenre, promoFilmDate, films, authorizationStatus, isDataLoaded} = props;
+  const {promoFilmTitle, promoFilmGenre, promoFilmDate, films, film, similarFilms, comments, onSmallFilmCardClick, authorizationStatus, isDataLoaded} = props;
 
   if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
     return (
@@ -66,7 +71,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
           <PlayerScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.Film}>
-          <FilmScreen films={films}/>
+          <FilmScreen films={films} film={film} similarFilms={similarFilms} comments={comments} onSmallFilmCardClick={onSmallFilmCardClick} />
         </Route>
         <Route exact path={AppRoute.AddReview}>
           <AddReviewScreen films={films}

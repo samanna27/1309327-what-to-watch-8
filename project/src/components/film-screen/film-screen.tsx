@@ -2,14 +2,35 @@ import Logo from '../logo/logo';
 import { Film } from '../../types/film';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import Tabs from '../tabs/tabs';
+import {bindActionCreators, Dispatch} from 'redux';
+import {connect, ConnectedProps} from 'react-redux';
+import {loadFilmData} from '../../store/action';
+import {State} from '../../types/state';
+import {Actions} from '../../types/action';
 
 type FilmScreenProps = {
   films: Film[];
 }
 
-function FilmScreen({films}: FilmScreenProps):JSX.Element {
-  const firstFilm = films[0];
-  const { id, poster, title, bigPoster, genre, releaseDate } = firstFilm;
+const mapStateToProps = ({film, similarFilms, comments}: State) => ({
+  film,
+  similarFilms,
+  comments,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
+  onSmallFilmCardClick: loadFilmData,
+}, dispatch);
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & FilmScreenProps;
+
+function FilmScreen({films, film, similarFilms, comments, onSmallFilmCardClick}: ConnectedComponentProps):JSX.Element {
+  // const firstFilm = films[0];
+  // const { id, poster, title, bigPoster, genre, releaseDate } = firstFilm;
+  const { id, poster, title, bigPoster, genre, releaseDate } = film;
   // const { description } = overview;
 
   return (
@@ -102,7 +123,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
               <img src={poster} alt="The Grand Budapest Hotel poster" width="218" height="327" />
             </div>
 
-            <Tabs film={firstFilm} />
+            <Tabs film={film} />
           </div>
         </div>
       </section>
@@ -112,7 +133,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__films-list">
-            {films.slice().filter((film) => film.genre === firstFilm.genre).slice(0,4).map((film) => (<SmallFilmCard key={film.id} film={film}/>))}
+            {films.slice().filter((item) => item.genre === film.genre).slice(0,4).map((item) => (<SmallFilmCard key={item.id} film={item} similarFilms={similarFilms} comments={comments} onSmallFilmCardClick={onSmallFilmCardClick} />))}
           </div>
         </section>
 

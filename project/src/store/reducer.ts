@@ -27,16 +27,15 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {...state };
     case ActionType.ProvideFilmList:{
       const genre = action.payload;
-      let renderedFilms = state.renderedFilms;
-      let filmList = Array.from(state.films).map((film)=>adaptToClient(film));
+      const filmList = Array.from(state.films).map((film)=>adaptToClient(film));
       if (genre==='All genres') {
         return {
           ...state, filmList,
         };
       }
-      filmList = state.filmList.slice().filter((film) => film.genre === genre);
-      renderedFilms = 0;
-      return {...state, filmList, renderedFilms};
+      state.filmList = state.filmList.slice().filter((film) => film.genre === genre);
+      const renderedFilms = 0;
+      return {...state, genre, filmList, renderedFilms};
     }
     case ActionType.LoadFilms: {
       const {films} = action.payload;
