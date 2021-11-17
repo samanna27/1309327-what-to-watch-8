@@ -3,8 +3,11 @@ import {connect, ConnectedProps} from 'react-redux';
 import React from 'react';
 import Logo from '../logo/logo';
 import GenresList from '../genres-list/genres-list';
+import SmallFilmCard from '../small-film-card/small-film-card';
+import ShowMoreButton from '../show-more-button/show-more-button';
 import {ThunkAppDispatch} from '../../types/action';
 import {logoutAction} from '../../store/api-actions';
+import {State} from '../../types/state';
 
 type MainPageProps = {
   promoFilmTitle: string;
@@ -12,18 +15,25 @@ type MainPageProps = {
   promoFilmDate: number;
 }
 
+const mapStateToProps = ({films, genre, renderedFilms}: State) => ({
+  films,
+  genre,
+  renderedFilms,
+});
+
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
   requireLogout() {
     dispatch(logoutAction());
   },
 });
 
-const connector = connect(mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & MainPageProps;
 
 function MainPage(props: ConnectedComponentProps): JSX.Element {
-  const {promoFilmTitle, promoFilmGenre, promoFilmDate, requireLogout}=props;
+  const {films, renderedFilms, genre, promoFilmTitle, promoFilmGenre, promoFilmDate, requireLogout}=props;
+  let filmsLength = 0;
 
   return (
     <React.Fragment>
@@ -94,8 +104,25 @@ function MainPage(props: ConnectedComponentProps): JSX.Element {
       <div className="page-content">
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
-
           <GenresList />
+
+          <div className="catalog__films-list">
+            {genre === 'All genres' ? (
+              filmsLength = films.length,
+              films.slice(0, Math.min(films.length, renderedFilms)).map((film) => (
+                <SmallFilmCard key={film.id} film={film} />
+              ))
+            ) : (
+              filmsLength = films.filter((film) => film.genre === genre).length,
+              films.filter((film) => film.genre === genre).slice(0, Math.min(films.length, renderedFilms)).map((film) => (
+                <SmallFilmCard key={film.id} film={film} />
+              ))
+            )}
+          </div>
+
+          <div className="catalog__more">
+            {filmsLength > renderedFilms ? <ShowMoreButton /> : '' }
+          </div>
         </section>
 
         <footer className="page-footer">

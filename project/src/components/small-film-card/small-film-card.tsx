@@ -2,23 +2,12 @@ import { Film } from '../../types/film';
 import { Link } from 'react-router-dom';
 import VideoPlayer from '../video-player/video-player';
 import { useState } from 'react';
-import {connect, ConnectedProps} from 'react-redux';
-import {State} from '../../types/state';
 
 type SmallFilmCardProps = {
   film: Film;
 }
 
-const mapStateToProps = ({film}: State) => ({
-  film,
-});
-
-const connector = connect(mapStateToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & SmallFilmCardProps;
-
-function SmallFilmCard({film}: ConnectedComponentProps):JSX.Element {
+function SmallFilmCard({film}: SmallFilmCardProps):JSX.Element {
   const { id, title } = film;
   const [isPlaying, setIsPlaying] = useState(true);
   return (
@@ -37,5 +26,4 @@ function SmallFilmCard({film}: ConnectedComponentProps):JSX.Element {
   );
 }
 
-export {SmallFilmCard};
-export default connector(SmallFilmCard);
+export default SmallFilmCard;

@@ -6,10 +6,10 @@ import {Film, FilmReview} from '../types/film';
 import {AuthData} from '../types/auth-data';
 import {adaptToClient} from '../components/adaptor/adaptor';
 
-export const fetchFilmAction = (): ThunkActionResult =>
+export const fetchFilmsAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const {data} = await api.get<Film[]>(APIRoute.Films);
-    dispatch(loadFilms(adaptToClient(data)));
+    dispatch(loadFilms(data.map(adaptToClient)));
   };
 
 export const fetchFilmDataAction = (): ThunkActionResult =>

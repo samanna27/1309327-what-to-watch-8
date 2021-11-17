@@ -26,24 +26,11 @@ export const FILM_GENRES = {
   'Thrillers': 'Thriller',
 };
 
-export const GENRES = [
-  'All genres',
-  'Comedies',
-  'Crime',
-  'Documentary',
-  'Dramas',
-  'Horror',
-  'Kids & Family',
-  'Romance',
-  'Sci-Fi',
-  'Thrillers',
-];
-
 export enum APIRoute {
   Films = '/films',
-  Film = 'films/: id',
-  SimilarFilms = 'films/: id/similar',
-  Comments = 'comments/: film_id',
+  Film = 'films/:id',
+  SimilarFilms = 'films/:id/similar',
+  Comments = 'comments/:filmId',
   Login = '/login',
   Logout = '/logout',
 }

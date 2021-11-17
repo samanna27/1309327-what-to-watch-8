@@ -1,9 +1,7 @@
 import {ActionType, Actions} from '../types/action';
 import {State} from '../types/state';
-// import { films } from '../mocks/films';
 import {AuthorizationStatus} from '../const';
 import { Film, FilmReview } from '../types/film';
-// import { adaptToClient } from '../components/adaptor/adaptor';
 
 const movie = {} as Film;
 const movieComment = {} as FilmReview;
@@ -18,35 +16,22 @@ const initialState = {
   comment: movieComment,
   authorizationStatus: AuthorizationStatus.Unknown,
   isDataLoaded: false,
-  renderedFilms: 0,
+  renderedFilms: 8,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
   switch (action.type) {
-    case ActionType.GenreChange:
-      return {...state };
+    case ActionType.ChangeGenre:{
+      const genre = action.payload;
+      return {...state, genre };
+    }
     case ActionType.ChangeRenderedFilms:{
       const renderedFilms = action.payload;
       return {...state, renderedFilms};
     }
-    case ActionType.ProvideFilmList:{
-      const genre = action.payload.genre;
-      const filmList = action.payload.adaptedFilmList;
-      // const filmList = Array.from(state.films).map((film)=>adaptToClient(film));
-      if (genre==='All genres') {
-        return {
-          ...state, filmList,
-        };
-      }
-      state.filmList = state.filmList.slice().filter((film) => film.genre === genre);
-      // renderedFilms = 0;
-      return {...state, genre, filmList};
-    }
     case ActionType.LoadFilms: {
       const {films} = action.payload;
-      const filmList = films;
-      //TO DO вот эта строчка не работает
-      return {...state, films, filmList};
+      return {...state, films};
     }
     case ActionType.LoadFilmData: {
       const {film} = action.payload;

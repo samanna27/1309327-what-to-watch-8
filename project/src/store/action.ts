@@ -2,19 +2,14 @@ import {ActionType} from '../types/action';
 import {Film, Genre, FilmReview} from '../types/film';
 import {AppRoute, AuthorizationStatus} from '../const';
 
-export const genreChange = (genre: Genre) => ({
-  type: ActionType.GenreChange,
+export const changeGenre = (genre: Genre) => ({
+  type: ActionType.ChangeGenre,
   payload: genre,
 } as const);
 
 export const changeRenderedFilms = (renderedFilms: number) => ({
   type: ActionType.ChangeRenderedFilms,
   payload: renderedFilms,
-} as const);
-
-export const provideFilmList = (genre: Genre, adaptedFilmList: Film[]) => ({
-  type: ActionType.ProvideFilmList,
-  payload: {genre, adaptedFilmList},
 } as const);
 
 export const resetFilmList = () => ({

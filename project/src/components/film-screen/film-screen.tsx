@@ -122,7 +122,7 @@ function FilmScreen({ film, similarFilms}: ConnectedComponentProps):JSX.Element 
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__films-list">
-            {similarFilms.slice(0,4).map((item) => (<SmallFilmCard key={item.id} />))}
+            {similarFilms.slice(0,4).map((item) => (<SmallFilmCard key={item.id} film={item}/>))}
           </div>
         </section>
 

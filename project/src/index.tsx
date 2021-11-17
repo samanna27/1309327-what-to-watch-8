@@ -8,7 +8,7 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import App from './components/app/app';
 import {reducer} from './store/reducer';
 import { requireAuthorization} from './store/action';
-import {fetchFilmAction, checkAuthAction} from './store/api-actions';
+import {fetchFilmsAction, checkAuthAction} from './store/api-actions';
 import {ThunkAppDispatch} from './types/action';
 import {AuthorizationStatus} from './const';
 import {redirect} from './store/middlewares/redirect';
@@ -32,7 +32,7 @@ export const store = createStore(
 );
 
 (store.dispatch as ThunkAppDispatch)(checkAuthAction());
-(store.dispatch as ThunkAppDispatch)(fetchFilmAction());
+(store.dispatch as ThunkAppDispatch)(fetchFilmsAction());
 
 ReactDOM.render(
   <React.StrictMode>
