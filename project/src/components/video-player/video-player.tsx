@@ -10,7 +10,7 @@ type VideoPlayerProps = {
 }
 
 function VideoPlayer({isPlaying, film, onFilmCardFocus, onFilmCardBlur}: VideoPlayerProps): JSX.Element {
-  const {poster, videoSrc} = film;
+  const {previewImage, videoSrc} = film;
   // const [isFocus, setIsFocus] = useState(false);
   // const [isBlur, setIsBlur] = useState(false);
 
@@ -28,7 +28,7 @@ function VideoPlayer({isPlaying, film, onFilmCardFocus, onFilmCardBlur}: VideoPl
 
   return (
     <div className="small-film-card__image">
-      <img src={poster} alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175"
+      <img src={previewImage} alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175"
         onFocus={onFilmCardFocus}
         onBlur={onFilmCardBlur}
       />
@@ -38,7 +38,7 @@ function VideoPlayer({isPlaying, film, onFilmCardFocus, onFilmCardBlur}: VideoPl
         width="280"
         controls
         muted
-        poster={poster}
+        poster={previewImage}
         preload="auto"
       />
     </div>
