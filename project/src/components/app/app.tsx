@@ -13,18 +13,13 @@ import {Film} from '../../types/film';
 import LoadingScreen from '../loading-screen/loading-screen';
 import {State} from '../../types/state';
 import browserHistory from '../../browser-history';
-import {loadFilmData} from '../../store/action';
 
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
-const mapStateToProps = ({authorizationStatus, isDataLoaded, film, similarFilms, comments}: State) => ({
+const mapStateToProps = ({authorizationStatus, isDataLoaded}: State) => ({
   authorizationStatus,
   isDataLoaded,
-  film,
-  similarFilms,
-  comments,
-  onSmallFilmCardClick: loadFilmData,
 });
 
 const connector = connect(mapStateToProps);
@@ -39,7 +34,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & AppScreenProps;
 
 function App(props: ConnectedComponentProps): JSX.Element {
-  const {promoFilmTitle, promoFilmGenre, promoFilmDate, films, film, similarFilms, comments, onSmallFilmCardClick, authorizationStatus, isDataLoaded} = props;
+  const {promoFilmTitle, promoFilmGenre, promoFilmDate, films, authorizationStatus, isDataLoaded} = props;
 
   if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
     return (
@@ -68,8 +63,8 @@ function App(props: ConnectedComponentProps): JSX.Element {
           <PlayerScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.Film}>
-          <FilmScreen films={films} film={film} similarFilms={similarFilms} comments={comments} onSmallFilmCardClick={onSmallFilmCardClick} />
-{/*  TODO!!!! мне нужно здесь прокидывать пропсы, которые будут использованы в компоненте FilmScreen и его дочерних компонентах- similarFilms, comments? я думаю, что они должны напрямую из стора в компонент попадать. */}
+          <FilmScreen />
+          {/*  TODO!!!! мне нужно здесь прокидывать пропсы, которые будут использованы в компоненте FilmScreen и его дочерних компонентах- similarFilms, comments? я думаю, что они должны напрямую из стора в компонент попадать. */}
         </Route>
         <Route exact path={AppRoute.AddReview}>
           <AddReviewScreen films={films}

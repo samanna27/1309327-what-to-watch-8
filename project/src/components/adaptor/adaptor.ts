@@ -1,5 +1,3 @@
-import { FilmReview } from '../../types/film';
-
 const defineFilmRating = (rating: number) => {
   switch (true) {
     case ( rating >= 0 && rating < 3):
@@ -63,20 +61,4 @@ export const adaptToClient = (film: any) => {
   delete adaptedFilm['background_color'];
 
   return adaptedFilm;
-};
-
-export const adaptToServer = (comment: FilmReview) => {
-  const adaptedComment = Object.assign(
-    {},
-    comment,
-    {
-      'rating': comment.rate,
-      'comment': comment.text,
-    },
-  );
-
-  delete adaptedComment.text;
-  delete adaptedComment.rate;
-
-  return adaptedComment;
 };

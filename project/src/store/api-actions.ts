@@ -4,7 +4,7 @@ import {saveToken, dropToken, Token} from '../services/token';
 import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
 import {Film, FilmReview} from '../types/film';
 import {AuthData} from '../types/auth-data';
-import {adaptToClient, adaptToServer} from '../components/adaptor/adaptor';
+import {adaptToClient} from '../components/adaptor/adaptor';
 
 export const fetchFilmAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
@@ -34,7 +34,7 @@ export const fetchPostCommentAction = (comment: FilmReview): ThunkActionResult =
   async (dispatch, _getState, api) => {
     const {data: {token}} = await api.post<{token: Token}>(APIRoute.Comments, comment);
     saveToken(token);
-    dispatch(addComment(adaptToServer(comment)));
+    dispatch(addComment(comment));
   };
 
 export const checkAuthAction = (): ThunkActionResult =>

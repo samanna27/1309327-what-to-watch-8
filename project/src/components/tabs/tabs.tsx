@@ -5,7 +5,6 @@ import FilmReview from '../film-review/film-review';
 import {useState} from 'react';
 import { Link } from 'react-router-dom';
 
-
 type TabsProps = {
   film: Film;
 }
@@ -76,7 +75,7 @@ function Tabs({film}: TabsProps):JSX.Element {
 
       {isVisibleFilmOverview && <FilmOverview film={film} />}
       {isVisibleFilmDetails && <FilmDetails film={film} />}
-      {isVisibleFilmReviews && <FilmReview film={film} />}
+      {isVisibleFilmReviews && <FilmReview/>}
 
     </div>
   );

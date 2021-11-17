@@ -1,6 +1,5 @@
 import { Film, FilmReview } from './film';
 import {AuthorizationStatus} from '../const';
-import { ActionType } from './action';
 
 export type State = {
   genre: string,
@@ -13,8 +12,4 @@ export type State = {
   authorizationStatus: AuthorizationStatus,
   isDataLoaded: boolean,
   renderedFilms: number,
-  onSmallFilmCardClick: (film: Film) => {
-    type: ActionType.LoadFilmData,
-    payload: {film:Film}
-  },
 };

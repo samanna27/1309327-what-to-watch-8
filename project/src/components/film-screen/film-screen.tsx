@@ -1,5 +1,4 @@
 import Logo from '../logo/logo';
-import { Film } from '../../types/film';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import Tabs from '../tabs/tabs';
 import {bindActionCreators, Dispatch} from 'redux';
@@ -7,15 +6,16 @@ import {connect, ConnectedProps} from 'react-redux';
 import {loadFilmData} from '../../store/action';
 import {State} from '../../types/state';
 import {Actions} from '../../types/action';
+import {fetchFilmDataAction, fetchSimilarFilmsAction} from '../../store/api-actions';
+import {ThunkAppDispatch} from '../../types/action';
+import {store} from '../../index';
 
-type FilmScreenProps = {
-  films: Film[];
-}
+(store.dispatch as ThunkAppDispatch)(fetchFilmDataAction());
+(store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction());
 
-const mapStateToProps = ({film, similarFilms, comments}: State) => ({
+const mapStateToProps = ({film, similarFilms}: State) => ({
   film,
   similarFilms,
-  comments,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
@@ -25,13 +25,10 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & FilmScreenProps;
+type ConnectedComponentProps = PropsFromRedux;
 
-function FilmScreen({films, film, similarFilms, comments, onSmallFilmCardClick}: ConnectedComponentProps):JSX.Element {
-  // const firstFilm = films[0];
-  // const { id, poster, title, bigPoster, genre, releaseDate } = firstFilm;
+function FilmScreen({ film, similarFilms}: ConnectedComponentProps):JSX.Element {
   const { id, poster, title, bigPoster, genre, releaseDate } = film;
-  // const { description } = overview;
 
   return (
     <>
@@ -133,7 +130,7 @@ function FilmScreen({films, film, similarFilms, comments, onSmallFilmCardClick}:
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__films-list">
-            {films.slice().filter((item) => item.genre === film.genre).slice(0,4).map((item) => (<SmallFilmCard key={item.id} film={item} similarFilms={similarFilms} comments={comments} onSmallFilmCardClick={onSmallFilmCardClick} />))}
+            {similarFilms.slice(0,4).map((item) => (<SmallFilmCard key={item.id} />))}
           </div>
         </section>
 
@@ -155,4 +152,5 @@ function FilmScreen({films, film, similarFilms, comments, onSmallFilmCardClick}:
   );
 }
 
-export default FilmScreen;
+export {FilmScreen};
+export default connector(FilmScreen);

@@ -13,13 +13,10 @@ type GenresListProps = {
   // films: Film[];
 }
 
-const mapStateToProps = ({genre, filmList, films, film, similarFilms, comments, renderedFilms}: State) => ({
+const mapStateToProps = ({genre, filmList, films, renderedFilms}: State) => ({
   genre,
   filmList,
   films,
-  film,
-  similarFilms,
-  comments,
   renderedFilms,
 });
 
@@ -34,7 +31,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & GenresListProps;
 
 function GenresList(props: ConnectedComponentProps):JSX.Element {
-  const { filmList, films, film, similarFilms, comments, onSmallFilmCardClick, onGenreClick} = props;
+  const { filmList, films, onGenreClick} = props;
   const filmCount = films.length;
   let renderedFilms = 0;
 
@@ -56,10 +53,10 @@ function GenresList(props: ConnectedComponentProps):JSX.Element {
         ))}
       </ul>
       {/* {document.querySelector('.catalog__genres-item')? null: document.querySelector('.catalog__genres-item').classList.add('catalog__genres-item--active')} */}
-{/* TODO!!! Ожидала, что код предыдущей строки будет добавлять класс в тег li, чтобы отображался стиль подчеркивания выбранного фильра по жанру, но код не работает. Пока что закоментировала. */}
+      {/* TODO!!! Ожидала, что код предыдущей строки будет добавлять класс в тег li, чтобы отображался стиль подчеркивания выбранного фильра по жанру, но код не работает. Пока что закоментировала. */}
       {renderedFilms < filmCount? renderedFilms += FILM_CARD_COUNT_PER_STEP: renderedFilms=filmCount}
-      <FilmsListComponent films={filmList.slice(0, renderedFilms)} film={film} similarFilms={similarFilms} comments={comments} onSmallFilmCardClick={onSmallFilmCardClick}/>
-      {renderedFilms === filmCount ? null: <ShowMoreButton renderedFilms={renderedFilms} filmCount={filmCount} filmList={filmList}/>}
+      <FilmsListComponent films={filmList.slice(0, renderedFilms)} />
+      {renderedFilms === filmCount ? null: <ShowMoreButton filmCount={filmCount} filmList={filmList}/>}
     </>
   );
 }
