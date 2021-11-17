@@ -1,33 +1,25 @@
 import Logo from '../logo/logo';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import Tabs from '../tabs/tabs';
-import {bindActionCreators, Dispatch} from 'redux';
 import {connect, ConnectedProps} from 'react-redux';
-import {loadFilmData} from '../../store/action';
 import {State} from '../../types/state';
-import {Actions} from '../../types/action';
 import {fetchFilmDataAction, fetchSimilarFilmsAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
 import {store} from '../../index';
-
-(store.dispatch as ThunkAppDispatch)(fetchFilmDataAction());
-(store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction());
 
 const mapStateToProps = ({film, similarFilms}: State) => ({
   film,
   similarFilms,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onSmallFilmCardClick: loadFilmData,
-}, dispatch);
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
 function FilmScreen({ film, similarFilms}: ConnectedComponentProps):JSX.Element {
+  (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction());
+  (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction());
   const { id, poster, title, bigPoster, genre, releaseDate } = film;
 
   return (

@@ -3,7 +3,7 @@ import {State} from '../types/state';
 // import { films } from '../mocks/films';
 import {AuthorizationStatus} from '../const';
 import { Film, FilmReview } from '../types/film';
-import { adaptToClient } from '../components/adaptor/adaptor';
+// import { adaptToClient } from '../components/adaptor/adaptor';
 
 const movie = {} as Film;
 const movieComment = {} as FilmReview;
@@ -25,21 +25,28 @@ const reducer = (state: State = initialState, action: Actions): State => {
   switch (action.type) {
     case ActionType.GenreChange:
       return {...state };
+    case ActionType.ChangeRenderedFilms:{
+      const renderedFilms = action.payload;
+      return {...state, renderedFilms};
+    }
     case ActionType.ProvideFilmList:{
-      const genre = action.payload;
-      const filmList = Array.from(state.films).map((film)=>adaptToClient(film));
+      const genre = action.payload.genre;
+      const filmList = action.payload.adaptedFilmList;
+      // const filmList = Array.from(state.films).map((film)=>adaptToClient(film));
       if (genre==='All genres') {
         return {
           ...state, filmList,
         };
       }
       state.filmList = state.filmList.slice().filter((film) => film.genre === genre);
-      const renderedFilms = 0;
-      return {...state, genre, filmList, renderedFilms};
+      // renderedFilms = 0;
+      return {...state, genre, filmList};
     }
     case ActionType.LoadFilms: {
       const {films} = action.payload;
-      return {...state, films};
+      const filmList = films;
+      //TO DO вот эта строчка не работает
+      return {...state, films, filmList};
     }
     case ActionType.LoadFilmData: {
       const {film} = action.payload;

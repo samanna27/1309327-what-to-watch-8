@@ -7,9 +7,14 @@ export const genreChange = (genre: Genre) => ({
   payload: genre,
 } as const);
 
-export const provideFilmList = (genre: Genre) => ({
+export const changeRenderedFilms = (renderedFilms: number) => ({
+  type: ActionType.ChangeRenderedFilms,
+  payload: renderedFilms,
+} as const);
+
+export const provideFilmList = (genre: Genre, adaptedFilmList: Film[]) => ({
   type: ActionType.ProvideFilmList,
-  payload: genre,
+  payload: {genre, adaptedFilmList},
 } as const);
 
 export const resetFilmList = () => ({

@@ -8,6 +8,7 @@ import {
 import {State} from '../types/state';
 import {
   genreChange,
+  changeRenderedFilms,
   provideFilmList,
   resetFilmList,
   loadFilms,
@@ -22,6 +23,7 @@ import {
 
 export enum ActionType {
   GenreChange = 'main/genreChange',
+  ChangeRenderedFilms = 'main/changeRenderedFilms',
   ProvideFilmList = 'main/ProvideFilmList',
   ResetFilmList = 'main/ResetFilmList',
   LoadFilms = 'data/loadFilms',
@@ -36,6 +38,7 @@ export enum ActionType {
 
 export type Actions =
  | ReturnType<typeof genreChange>
+ | ReturnType<typeof changeRenderedFilms>
  | ReturnType<typeof provideFilmList>
  | ReturnType<typeof resetFilmList>
  | ReturnType<typeof loadFilms>
