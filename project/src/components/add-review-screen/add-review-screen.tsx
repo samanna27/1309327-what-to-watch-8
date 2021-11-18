@@ -1,14 +1,39 @@
-import { Film, ReviewStarRating } from '../../types/film';
+import { ReviewStarRating } from '../../types/film';
 import {useState, FormEvent, ChangeEvent} from 'react';
+import {useHistory} from 'react-router-dom';
+import {connect, ConnectedProps} from 'react-redux';
+import {fetchPostCommentAction} from '../../store/api-actions';
+import {ThunkAppDispatch} from '../../types/action';
+import {AppRoute} from '../../const';
+import {State} from '../../types/state';
+import {addComment} from '../../store/action';
+import {Actions} from '../../types/action';
 
 type AddReviewScreenProps = {
-  films: Film[];
   onReviewInput: (rate: ReviewStarRating, text: string) => void;
 }
 
-function AddReviewScreen({films, onReviewInput}: AddReviewScreenProps):JSX.Element {
-  const firstFilm = films[0];
-  const { poster, title } = firstFilm;
+const mapStateToProps = ({film}: State) => ({
+  film,
+});
+
+const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
+  onReviewInput: (rate: ReviewStarRating, text: string) => {
+    // dispatch(fetchPostCommentAction());
+    dispatch(addComment());
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & AddReviewScreenProps;
+
+function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
+  const {film, onReviewInput} = props;
+  const { poster, title } = film;
+  const history = useHistory();
+
   const text = '';
   let starRatingCount = 10;
   const starRating =  new Array(10).fill('').map((index) => {
@@ -126,7 +151,13 @@ function AddReviewScreen({films, onReviewInput}: AddReviewScreenProps):JSX.Eleme
             <div className="add-review__text">
               <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text">{text}</textarea>
               <div className="add-review__submit">
-                <button className="add-review__btn" type="submit">Post</button>
+                <button
+                  onClick={() => history.push(AppRoute.Film)}
+                  className="add-review__btn"
+                  type="submit"
+                >
+                  Post
+                </button>
               </div>
 
             </div>
@@ -138,4 +169,5 @@ function AddReviewScreen({films, onReviewInput}: AddReviewScreenProps):JSX.Eleme
   );
 }
 
-export default AddReviewScreen;
+export {AddReviewScreen};
+export default connector(AddReviewScreen);

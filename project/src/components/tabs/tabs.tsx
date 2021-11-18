@@ -73,7 +73,7 @@ function Tabs({film}: TabsProps):JSX.Element {
         </ul>
       </nav>
 
-      {isVisibleFilmOverview && <FilmOverview film={film} />}
+      {isVisibleFilmOverview && <FilmOverview film={film}  />}
       {isVisibleFilmDetails && <FilmDetails film={film} />}
       {isVisibleFilmReviews && <FilmReview/>}
 

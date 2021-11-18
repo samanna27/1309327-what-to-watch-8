@@ -26,6 +26,7 @@ export type Film = {
   genre: string;
   releaseDate: number;
   videoSrc: string;
+  previewVideoLink: string,
   director: string;
   actors: string;
   duration: string;

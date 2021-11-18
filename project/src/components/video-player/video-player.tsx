@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Film } from '../../types/film';
-
+import {useHistory} from 'react-router-dom';
+import {AppRoute} from '../../const';
 
 type VideoPlayerProps = {
   isPlaying: boolean;
@@ -10,7 +11,8 @@ type VideoPlayerProps = {
 }
 
 function VideoPlayer({isPlaying, film, onFilmCardFocus, onFilmCardBlur}: VideoPlayerProps): JSX.Element {
-  const {previewImage, videoSrc} = film;
+  const { title, previewImage, previewVideoLink} = film;
+  const history = useHistory();
   // const [isFocus, setIsFocus] = useState(false);
   // const [isBlur, setIsBlur] = useState(false);
 
@@ -28,12 +30,13 @@ function VideoPlayer({isPlaying, film, onFilmCardFocus, onFilmCardBlur}: VideoPl
 
   return (
     <div className="small-film-card__image">
-      <img src={previewImage} alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175"
+      <img src={previewImage} alt={title} width="280" height="175"
         onFocus={onFilmCardFocus}
         onBlur={onFilmCardBlur}
+        onClick={()=>history.push(AppRoute.Film)}
       />
       <video
-        src={videoSrc}
+        src={previewVideoLink}
         ref={videoRef}
         width="280"
         controls

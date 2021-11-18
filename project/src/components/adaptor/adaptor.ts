@@ -1,18 +1,3 @@
-const defineFilmRating = (rating: number) => {
-  switch (true) {
-    case ( rating >= 0 && rating < 3):
-      return 'Bad';
-    case  (rating >= 3 && rating < 5):
-      return 'Normal';
-    case  (rating >= 5 && rating < 8):
-      return 'Good';
-    case  (rating >= 8 && rating < 10):
-      return 'Very good';
-    case  (rating === 10 ):
-      return 'Awesome';
-  }
-};
-
 const transferMinutesToDurationString = (minutes: number) => {
   const hours = minutes / 60;
   const min = minutes % 60;
@@ -32,13 +17,14 @@ export const adaptToClient = (film: any) => {
       bigPoster: film['background_image'],
       releaseDate: film['released'],
       videoSrc: film['video_link'],
+      previewVideoLink: film['preview_video_link'],
       actors: film['starring'],
       duration: transferMinutesToDurationString(film['run_time']),
       addedToWatchList: film['is_favorite'],
       overview: {
-        description: film['description'],
+        description: film.description,
         rating: film['rating'],
-        ratingDescr: defineFilmRating(film['rating']),
+        ratingDescr: film['rating'],
         votes: film['scores_count'],
       },
     },

@@ -8,7 +8,6 @@ const movieComment = {} as FilmReview;
 
 const initialState = {
   genre: 'All genres',
-  filmList: [],
   films: [],
   film: movie,
   similarFilms: [],
@@ -24,10 +23,6 @@ const reducer = (state: State = initialState, action: Actions): State => {
     case ActionType.ChangeGenre:{
       const genre = action.payload;
       return {...state, genre };
-    }
-    case ActionType.ChangeRenderedFilms:{
-      const renderedFilms = action.payload;
-      return {...state, renderedFilms};
     }
     case ActionType.LoadFilms: {
       const {films} = action.payload;

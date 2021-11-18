@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom';
 import Logo from '../logo/logo';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import Tabs from '../tabs/tabs';
@@ -6,21 +7,28 @@ import {State} from '../../types/state';
 import {fetchFilmDataAction, fetchSimilarFilmsAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
 import {store} from '../../index';
+import {logoutAction} from '../../store/api-actions';
 
 const mapStateToProps = ({film, similarFilms}: State) => ({
   film,
   similarFilms,
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
+  requireLogout() {
+    dispatch(logoutAction());
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
-function FilmScreen({ film, similarFilms}: ConnectedComponentProps):JSX.Element {
+function FilmScreen({ film, similarFilms, requireLogout}: ConnectedComponentProps):JSX.Element {
+  const { id, poster, title, bigPoster, genre, releaseDate } = film;
   (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction());
   (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction());
-  const { id, poster, title, bigPoster, genre, releaseDate } = film;
 
   return (
     <>
@@ -59,7 +67,7 @@ function FilmScreen({ film, similarFilms}: ConnectedComponentProps):JSX.Element 
       <section className="film-card film-card--full" key={id}>
         <div className="film-card__hero">
           <div className="film-card__bg">
-            <img src={bigPoster} alt="The Grand Budapest Hotel" />
+            <img src={bigPoster} alt={title} />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -74,7 +82,17 @@ function FilmScreen({ film, similarFilms}: ConnectedComponentProps):JSX.Element 
                 </div>
               </li>
               <li className="user-block__item">
-                <button className="user-block__link">Sign out</button>
+                <Link
+                  className="user-block__link"
+                  onClick={(evt) => {
+                    evt.preventDefault();
+
+                    requireLogout();
+                  }}
+                  to='/'
+                >
+                  Sign out
+                </Link>
               </li>
             </ul>
           </header>

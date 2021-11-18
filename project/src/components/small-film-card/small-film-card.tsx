@@ -12,16 +12,18 @@ function SmallFilmCard({film}: SmallFilmCardProps):JSX.Element {
   const [isPlaying, setIsPlaying] = useState(true);
   return (
     <article className="small-film-card catalog__films-card">
-      <VideoPlayer
-        isPlaying={isPlaying}
-        film={film}
-        onFilmCardFocus={() => setIsPlaying(isPlaying)}
-        onFilmCardBlur={() => setIsPlaying(!isPlaying)}
-      />
-      {/* TODO!!! задание у меня по видео-плееру приняли, но когда я навожу мышку на постер, у меня почему-то не проигрывается превью... */}
-      <h3 className="small-film-card__title">
-        <Link to={`/films/${id}`} className="small-film-card__link" >{title}</Link>
-      </h3>
+      <Link to={`/films/${id}`} >
+        <VideoPlayer
+          isPlaying={isPlaying}
+          film={film}
+          onFilmCardFocus={() => setIsPlaying(isPlaying)}
+          onFilmCardBlur={() => setIsPlaying(!isPlaying)}
+        />
+        {/* TODO!!! задание у меня по видео-плееру приняли, но когда я навожу мышку на постер, у меня почему-то не проигрывается превью... */}
+        <h3 className="small-film-card__title">
+          {title}
+        </h3>
+      </Link>
     </article>
   );
 }

@@ -21,7 +21,7 @@ export const fetchFilmDataAction = (): ThunkActionResult =>
 export const fetchSimilarFilmsAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const {data} = await api.get<Film[]>(APIRoute.SimilarFilms);
-    dispatch(loadSimilarFilms(adaptToClient(data)));
+    dispatch(loadSimilarFilms(data.map(adaptToClient)));
   };
 
 export const fetchCommentsAction = (): ThunkActionResult =>
@@ -52,7 +52,6 @@ export const loginAction = ({login: email, password}: AuthData): ThunkActionResu
     saveToken(token);
     dispatch(requireAuthorization(AuthorizationStatus.Auth));
   };
-
 
 export const logoutAction = (): ThunkActionResult =>
   async (dispatch, _getState, api) => {

@@ -64,15 +64,16 @@ function App(props: ConnectedComponentProps): JSX.Element {
         </Route>
         <Route exact path={AppRoute.Film}>
           <FilmScreen />
-          {/*  TODO!!!! мне нужно здесь прокидывать пропсы, которые будут использованы в компоненте FilmScreen и его дочерних компонентах- similarFilms, comments? я думаю, что они должны напрямую из стора в компонент попадать. */}
         </Route>
-        <Route exact path={AppRoute.AddReview}>
-          <AddReviewScreen films={films}
-            onReviewInput={() => {
-              throw new Error('Function \'onReviewInput\' isn\'t implemented.');
-            }}
-          />
+        <Route exact path={AppRoute.Film}>
+          <FilmScreen />
         </Route>
+        <PrivateRoute
+          exact
+          path={AppRoute.AddReview}
+          render={()=><AddReviewScreen onReviewInput={() => {throw new Error('Function \'onReviewInput\' isn\'t implemented.');}}/>}
+        >
+        </PrivateRoute>
         <Route>
           <NotFoundScreen />
         </Route>
