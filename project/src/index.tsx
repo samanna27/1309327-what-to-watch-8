@@ -39,7 +39,6 @@ ReactDOM.render(
     <Provider store = {store}>
       <App
         promoFilmTitle={PromoFilmData.PROMO_FILM_TITLE} promoFilmGenre={PromoFilmData.PROMO_FILM_GENRE} promoFilmDate={PromoFilmData.PROMO_FILM_DATE}
-        films={store.getState().films}
       />
     </Provider>
   </React.StrictMode>,

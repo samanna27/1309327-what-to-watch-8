@@ -1,15 +1,14 @@
-import {ActionType, Actions} from '../types/action';
+import {Actions, ActionType} from '../types/action';
 import {State} from '../types/state';
 import {AuthorizationStatus} from '../const';
-import { Film, FilmReview } from '../types/film';
+import {FilmReview} from '../types/film';
 
-const movie = {} as Film;
 const movieComment = {} as FilmReview;
 
 const initialState = {
   genre: 'All genres',
   films: [],
-  film: movie,
+  currentFilm: null,
   similarFilms: [],
   comments: [],
   comment: movieComment,
@@ -22,15 +21,20 @@ const reducer = (state: State = initialState, action: Actions): State => {
   switch (action.type) {
     case ActionType.ChangeGenre:{
       const genre = action.payload;
-      return {...state, genre };
+      const renderedFilms = 8;
+      return {...state, genre, renderedFilms };
+    }
+    case ActionType.ChangeRenderedFilms:{
+      const renderedFilms = action.payload;
+      return {...state, renderedFilms };
     }
     case ActionType.LoadFilms: {
       const {films} = action.payload;
       return {...state, films};
     }
     case ActionType.LoadFilmData: {
-      const {film} = action.payload;
-      return {...state, film};
+      const {currentFilm} = action.payload;
+      return {...state, currentFilm};
     }
     case ActionType.LoadSimilarFilms: {
       const {similarFilms} = action.payload;

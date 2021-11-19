@@ -1,10 +1,3 @@
-const transferMinutesToDurationString = (minutes: number) => {
-  const hours = minutes / 60;
-  const min = minutes % 60;
-
-  return `${hours}h ${min}m`;
-};
-
 export const adaptToClient = (film: any) => {
   const adaptedFilm = Object.assign(
     {},
@@ -19,7 +12,7 @@ export const adaptToClient = (film: any) => {
       videoSrc: film['video_link'],
       previewVideoLink: film['preview_video_link'],
       actors: film['starring'],
-      duration: transferMinutesToDurationString(film['run_time']),
+      duration: film['run_time'],
       addedToWatchList: film['is_favorite'],
       overview: {
         description: film.description,

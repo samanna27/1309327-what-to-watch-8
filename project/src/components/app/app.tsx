@@ -6,7 +6,6 @@ import SignInScreen from '../sign-in-screen/sign-in-screen';
 import MyListScreen from '../my-list-screen/my-list-screen';
 import PlayerScreen from '../player-screen/player-screen';
 import FilmScreen from '../film-screen/film-screen';
-import AddReviewScreen from '../add-review-screen/add-review-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import PrivateRoute from '../private-route/private-route';
 import {Film} from '../../types/film';
@@ -17,9 +16,10 @@ import browserHistory from '../../browser-history';
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
-const mapStateToProps = ({authorizationStatus, isDataLoaded}: State) => ({
+const mapStateToProps = ({authorizationStatus, isDataLoaded, films}: State) => ({
   authorizationStatus,
   isDataLoaded,
+  films,
 });
 
 const connector = connect(mapStateToProps);
@@ -62,18 +62,19 @@ function App(props: ConnectedComponentProps): JSX.Element {
         <Route exact path={AppRoute.Player}>
           <PlayerScreen films={films}/>
         </Route>
-        <Route exact path={AppRoute.Film}>
-          <FilmScreen />
-        </Route>
-        <Route exact path={AppRoute.Film}>
-          <FilmScreen />
-        </Route>
-        <PrivateRoute
-          exact
-          path={AppRoute.AddReview}
-          render={()=><AddReviewScreen onReviewInput={() => {throw new Error('Function \'onReviewInput\' isn\'t implemented.');}}/>}
+        <Route exact path={AppRoute.Film} render={(params) => {
+          const filmId = parseInt(params.match.params.id, 10);
+          const matchedFilm = films.find((film) => film.id === filmId);
+          if (matchedFilm) {
+            return <FilmScreen film={matchedFilm}/>;
+          } else {
+            // eslint-disable-next-line
+            console.log(123);
+            return <FilmScreen film={null}/>;
+          }
+        }}
         >
-        </PrivateRoute>
+        </Route>
         <Route>
           <NotFoundScreen />
         </Route>

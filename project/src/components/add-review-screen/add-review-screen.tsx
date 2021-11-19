@@ -2,29 +2,27 @@ import { ReviewStarRating } from '../../types/film';
 import {useState, FormEvent, ChangeEvent} from 'react';
 import {useHistory} from 'react-router-dom';
 import {connect, ConnectedProps} from 'react-redux';
-import {fetchPostCommentAction} from '../../store/api-actions';
+// import {fetchPostCommentAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
 import {AppRoute} from '../../const';
-import {State} from '../../types/state';
-import {addComment} from '../../store/action';
-import {Actions} from '../../types/action';
+// import {State} from '../../types/state';
+// import {addComment} from '../../store/action';
+// import {Actions} from '../../types/action';
+import {Film} from '../../types/film';
 
 type AddReviewScreenProps = {
+  film: Film,
   onReviewInput: (rate: ReviewStarRating, text: string) => void;
 }
-
-const mapStateToProps = ({film}: State) => ({
-  film,
-});
 
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
   onReviewInput: (rate: ReviewStarRating, text: string) => {
     // dispatch(fetchPostCommentAction());
-    dispatch(addComment());
+    // dispatch(addComment());
   },
 });
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect( mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & AddReviewScreenProps;

@@ -12,9 +12,9 @@ export const fetchFilmsAction = (): ThunkActionResult =>
     dispatch(loadFilms(data.map(adaptToClient)));
   };
 
-export const fetchFilmDataAction = (): ThunkActionResult =>
+export const fetchFilmDataAction = (filmId: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    const {data} = await api.get<Film>(APIRoute.Film);
+    const {data} = await api.get<Film>(`/films/${filmId}`);
     dispatch(loadFilmData(adaptToClient(data)));
   };
 

@@ -17,7 +17,7 @@ export type FilmReview = {
 }
 
 export type Film = {
-  id: string;
+  id: number;
   poster: string;
   preview: string;
   previewImage: string;
@@ -28,7 +28,7 @@ export type Film = {
   videoSrc: string;
   previewVideoLink: string,
   director: string;
-  actors: string;
+  actors: string[];
   duration: string;
   addedToWatchList: boolean;
   overview: FilmOverview;

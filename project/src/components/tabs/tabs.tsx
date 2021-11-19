@@ -6,14 +6,14 @@ import {useState} from 'react';
 import { Link } from 'react-router-dom';
 
 type TabsProps = {
-  film: Film;
+  film: Film | null;
 }
 
 function Tabs({film}: TabsProps):JSX.Element {
+
   const [isVisibleFilmOverview, setVisibleFilmOverview] = useState(true);
   const [isVisibleFilmDetails, setVisibleFilmDetails] = useState(false);
   const [isVisibleFilmReviews, setVisibleFilmReviews] = useState(false);
-  const { id } = film;
 
   const addFilmOverview = function () {
     setVisibleFilmDetails((prevState) => false);
@@ -42,35 +42,48 @@ function Tabs({film}: TabsProps):JSX.Element {
   return (
     <div className="film-card__desc">
       <nav className="film-nav film-card__nav">
-        <ul className="film-nav__list">
-          <li className="film-nav__item film-nav__item--active">
-            <Link to={`/films/${id}`} className="film-nav__link" onClick={() => {
-              setVisibleFilmOverview((prevState) => true);
-              addFilmOverview();
-            }}
-            >
-            Overview
-            </Link>
-          </li>
-          <li className="film-nav__item">
-            <Link to={`/films/${id}`} className="film-nav__link" onClick={() => {
-              setVisibleFilmDetails((prevState) => true);
-              addFilmDetails();
-            }}
-            >
-            Details
-            </Link>
-          </li>
-          <li className="film-nav__item">
-            <Link to={`/films/${id}`} className="film-nav__link" onClick={() => {
-              setVisibleFilmReviews((prevState) => true);
-              addFilmReview();
-            }}
-            >
-            Reviews
-            </Link>
-          </li>
-        </ul>
+        {film === null ?
+        // document.querySelector('.film-nav__list')
+          <ul className="film-nav__list">
+            <li className="film-nav__item film-nav__item--active">
+              <a href="#" className="film-nav__link">Overview</a>
+            </li>
+            <li className="film-nav__item">
+              <a href="#" className="film-nav__link">Details</a>
+            </li>
+            <li className="film-nav__item">
+              <a href="#" className="film-nav__link">Reviews</a>
+            </li>
+          </ul> :
+          <ul className="film-nav__list">
+            <li className="film-nav__item film-nav__item--active">
+              <Link to={`/films/${film.id}`} className="film-nav__link" onClick={() => {
+                setVisibleFilmOverview((prevState) => true);
+                addFilmOverview();
+              }}
+              >
+              Overview
+              </Link>
+            </li>
+            <li className="film-nav__item">
+              <Link to={`/films/${film.id}`} className="film-nav__link" onClick={() => {
+                setVisibleFilmDetails((prevState) => true);
+                addFilmDetails();
+              }}
+              >
+              Details
+              </Link>
+            </li>
+            <li className="film-nav__item">
+              <Link to={`/films/${film.id}`} className="film-nav__link" onClick={() => {
+                setVisibleFilmReviews((prevState) => true);
+                addFilmReview();
+              }}
+              >
+              Reviews
+              </Link>
+            </li>
+          </ul>}
       </nav>
 
       {isVisibleFilmOverview && <FilmOverview film={film}  />}

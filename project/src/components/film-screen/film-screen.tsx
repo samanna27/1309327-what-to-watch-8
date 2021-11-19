@@ -1,17 +1,26 @@
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import Logo from '../logo/logo';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import Tabs from '../tabs/tabs';
 import {connect, ConnectedProps} from 'react-redux';
 import {State} from '../../types/state';
-import {fetchFilmDataAction, fetchSimilarFilmsAction} from '../../store/api-actions';
+import {fetchFilmDataAction, fetchSimilarFilmsAction, logoutAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
 import {store} from '../../index';
-import {logoutAction} from '../../store/api-actions';
+import {Film} from '../../types/film';
+import Loader from 'react-loader-spinner';
 
-const mapStateToProps = ({film, similarFilms}: State) => ({
-  film,
+type FilmScreenProps = {
+  film: Film | null
+}
+
+type FilmScreenRouteParams = {
+  id: string
+}
+
+const mapStateToProps = ({currentFilm, similarFilms}: State) => ({
   similarFilms,
+  currentFilm,
 });
 
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
@@ -23,11 +32,25 @@ const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux;
+type ConnectedComponentProps = PropsFromRedux & FilmScreenProps;
 
-function FilmScreen({ film, similarFilms, requireLogout}: ConnectedComponentProps):JSX.Element {
-  const { id, poster, title, bigPoster, genre, releaseDate } = film;
-  (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction());
+// film - from props
+// currentFilm - store
+function FilmScreen({ film, similarFilms, currentFilm, requireLogout}: ConnectedComponentProps):JSX.Element {
+  const params = useParams<FilmScreenRouteParams>();
+  if (film === null && currentFilm === null) {
+    const filmId = params.id;
+    (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction(filmId));
+    return (
+      <Loader type="Puff"
+        color="#00BFFF"
+        height={500}
+        width={500}
+      />
+    );
+  }
+  const { id, poster, title, bigPoster, genre, releaseDate } = film || currentFilm || {};
+
   (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction());
 
   return (

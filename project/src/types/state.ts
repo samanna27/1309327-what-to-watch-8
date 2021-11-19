@@ -4,7 +4,7 @@ import {AuthorizationStatus} from '../const';
 export type State = {
   genre: string,
   films: Film[],
-  film: Film,
+  currentFilm: Film | null,
   similarFilms: Film[],
   comments: FilmReview[],
   comment: FilmReview,
