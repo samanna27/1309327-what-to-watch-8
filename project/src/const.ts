@@ -29,7 +29,7 @@ export const FILM_GENRES = {
 export enum APIRoute {
   Films = '/films',
   Film = 'GET/films/:id',
-  SimilarFilms = '/films/:id/similar',
+  SimilarFilms = 'GET/films/:id/similar',
   Comments = '/comments/:filmId',
   Login = '/login',
   Logout = '/logout',

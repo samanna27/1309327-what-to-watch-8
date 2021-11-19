@@ -65,7 +65,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
         <Route exact path={AppRoute.Film} render={(params) => {
           const filmId = parseInt(params.match.params.id, 10);
           const matchedFilm = films.find((film) => film.id === filmId);
-          if (matchedFilm) {
+          if ( matchedFilm) {
             return <FilmScreen film={matchedFilm}/>;
           } else {
             // eslint-disable-next-line

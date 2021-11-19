@@ -5,7 +5,7 @@ export type State = {
   genre: string,
   films: Film[],
   currentFilm: Film | null,
-  similarFilms: Film[],
+  similarFilms: Film[] | null,
   comments: FilmReview[],
   comment: FilmReview,
   authorizationStatus: AuthorizationStatus,

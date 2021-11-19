@@ -11,7 +11,7 @@ import {Film} from '../../types/film';
 import Loader from 'react-loader-spinner';
 
 type FilmScreenProps = {
-  film: Film | null
+  film: Film | null,
 }
 
 type FilmScreenRouteParams = {
@@ -37,10 +37,12 @@ type ConnectedComponentProps = PropsFromRedux & FilmScreenProps;
 // film - from props
 // currentFilm - store
 function FilmScreen({ film, similarFilms, currentFilm, requireLogout}: ConnectedComponentProps):JSX.Element {
+  const exit = '';
   const params = useParams<FilmScreenRouteParams>();
+  const filmId = params.id;
   if (film === null && currentFilm === null) {
-    const filmId = params.id;
     (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction(filmId));
+    (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction(filmId));
     return (
       <Loader type="Puff"
         color="#00BFFF"
@@ -51,7 +53,18 @@ function FilmScreen({ film, similarFilms, currentFilm, requireLogout}: Connected
   }
   const { id, poster, title, bigPoster, genre, releaseDate } = film || currentFilm || {};
 
-  (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction());
+  // if (id) {
+  // eslint-disable-next-line
+     console.log(123);
+  (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction(filmId));
+  // return (
+  //   <Loader type="Puff"
+  //     color="#00BFFF"
+  //     height={500}
+  //     width={500}
+  //   />
+  // );
+  // }
 
   return (
     <>
@@ -109,7 +122,6 @@ function FilmScreen({ film, similarFilms, currentFilm, requireLogout}: Connected
                   className="user-block__link"
                   onClick={(evt) => {
                     evt.preventDefault();
-
                     requireLogout();
                   }}
                   to='/'
@@ -163,7 +175,9 @@ function FilmScreen({ film, similarFilms, currentFilm, requireLogout}: Connected
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__films-list">
-            {similarFilms.slice(0,4).map((item) => (<SmallFilmCard key={item.id} film={item}/>))}
+            {similarFilms === null ?
+              <div>{exit}</div> :
+              similarFilms.slice(0,4).map((item) => <SmallFilmCard key={item.id} film={item}/>)}
           </div>
         </section>
 

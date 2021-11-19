@@ -18,9 +18,9 @@ export const fetchFilmDataAction = (filmId: string): ThunkActionResult =>
     dispatch(loadFilmData(adaptToClient(data)));
   };
 
-export const fetchSimilarFilmsAction = (): ThunkActionResult =>
+export const fetchSimilarFilmsAction = (filmId: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    const {data} = await api.get<Film[]>(APIRoute.SimilarFilms);
+    const {data} = await api.get<Film[]>(`/films/${filmId}/similar`);
     dispatch(loadSimilarFilms(data.map(adaptToClient)));
   };
 
