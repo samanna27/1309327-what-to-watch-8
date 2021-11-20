@@ -1,20 +1,32 @@
 import {connect, ConnectedProps} from 'react-redux';
 import {State} from '../../types/state';
-import {fetchCommentsAction} from '../../store/api-actions';
-import {ThunkAppDispatch} from '../../types/action';
-import {store} from '../../index';
+// import {fetchCommentsAction} from '../../store/api-actions';
+// import {ThunkAppDispatch} from '../../types/action';
+// import {store} from '../../index';
+import { Film } from '../../types/film';
+import dayjs from 'dayjs';
 
-const mapStateToProps = ({comments}: State) => ({
+type FilmReviewProps = {
+  film: Film | null,
+}
+
+const mapStateToProps = ({currentFilm, comments}: State) => ({
+  currentFilm,
   comments,
 });
 
 const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux ;
+type ConnectedComponentProps = PropsFromRedux & FilmReviewProps ;
 
-function FilmReview({comments}: ConnectedComponentProps):JSX.Element {
-  (store.dispatch as ThunkAppDispatch)(fetchCommentsAction());
+function FilmReview({currentFilm, comments, film}: ConnectedComponentProps):JSX.Element {
+  // if (currentFilm) {
+  //   const currentFilmId = currentFilm.id.toString();
+  //   (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(currentFilmId));}
+  // if (film) {
+  //   const filmId = film.id.toString();
+  //   (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(filmId));}
 
   return (
     <div className="film-card__reviews film-card__row">
@@ -26,7 +38,7 @@ function FilmReview({comments}: ConnectedComponentProps):JSX.Element {
 
               <footer className="review__details">
                 <cite className="review__author">{comment.user.name}</cite>
-                <time className="review__date" dateTime={comment.date}>{comment.date}</time>
+                <time className="review__date" dateTime={comment.date}>{dayjs(comment.date).format('MMMM DD, YYYY')}</time>
               </footer>
             </blockquote>
 

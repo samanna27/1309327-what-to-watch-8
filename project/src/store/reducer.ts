@@ -1,17 +1,19 @@
 import {Actions, ActionType} from '../types/action';
 import {State} from '../types/state';
 import {AuthorizationStatus} from '../const';
-import {FilmReview} from '../types/film';
+import {Film} from '../types/film';
 
-const movieComment = {} as FilmReview;
+const movies = [] as Film[];
 
 const initialState = {
   genre: 'All genres',
   films: [],
   currentFilm: null,
-  similarFilms: [],
+  promoFilm: null,
+  currentId: -1,
+  similarFilms: movies,
   comments: [],
-  comment: movieComment,
+  comment: {rating: 0, text: ''},
   authorizationStatus: AuthorizationStatus.Unknown,
   isDataLoaded: false,
   renderedFilms: 8,
@@ -36,9 +38,14 @@ const reducer = (state: State = initialState, action: Actions): State => {
       const {currentFilm} = action.payload;
       return {...state, currentFilm};
     }
+    case ActionType.LoadPromoFilmData: {
+      const {promoFilm} = action.payload;
+      return {...state, promoFilm};
+    }
     case ActionType.LoadSimilarFilms: {
-      const {similarFilms} = action.payload;
-      return {...state, similarFilms};
+      const similarFilms = action.payload.similarFilms;
+      const currentId = action.payload.currentId;
+      return {...state, similarFilms, currentId};
     }
     case ActionType.LoadComments: {
       const {comments} = action.payload;

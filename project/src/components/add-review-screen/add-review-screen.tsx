@@ -1,36 +1,66 @@
-import { ReviewStarRating } from '../../types/film';
-import {useState, FormEvent, ChangeEvent} from 'react';
+// import { ReviewStarRating } from '../../types/film';
+import {Link} from 'react-router-dom';
+import {useState, FormEvent, ChangeEvent, useRef} from 'react';
 import {useHistory} from 'react-router-dom';
 import {connect, ConnectedProps} from 'react-redux';
-// import {fetchPostCommentAction} from '../../store/api-actions';
+import {fetchPostCommentAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
 import {AppRoute} from '../../const';
 // import {State} from '../../types/state';
 // import {addComment} from '../../store/action';
 // import {Actions} from '../../types/action';
 import {Film} from '../../types/film';
+// import {State} from '../../types/state';
+import {logoutAction} from '../../store/api-actions';
 
 type AddReviewScreenProps = {
-  film: Film,
-  onReviewInput: (rate: ReviewStarRating, text: string) => void;
+  film: Film ,
+  // onReviewInput: (rate: ReviewStarRating, text: string) => void;
 }
 
+// const mapStateToProps = ({filmscurrentFilm}: State) => ({
+//   currentFilm,
+// });
+
+
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onReviewInput: (rate: ReviewStarRating, text: string) => {
-    // dispatch(fetchPostCommentAction());
-    // dispatch(addComment());
+  requireLogout() {
+    dispatch(logoutAction());
+  },
+  // onReviewInput: (rate: ReviewStarRating, text: string) => {
+  //   dispatch(fetchPostCommentAction(Comment));
+  //   dispatch(addComment(Comment));
+  // },
+  onSubmit(commentData: {rating: number, text: string}) {
+    dispatch(fetchPostCommentAction(commentData));
   },
 });
 
-const connector = connect( mapDispatchToProps);
+const connector = connect(mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & AddReviewScreenProps;
 
 function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
-  const {film, onReviewInput} = props;
-  const { poster, title } = film;
+  const {film, requireLogout} = props;
+  const { bigPoster, poster, title } = film;
+  const {onSubmit} = props;
+
+  const starRatingRef = useRef<HTMLInputElement | null>(null);
+  const textRef = useRef<HTMLInputElement | null>(null);
+
   const history = useHistory();
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    if (starRatingRef.current !== null && textRef.current !== null) {
+      onSubmit({
+        rating: +starRatingRef.current.value,
+        text: textRef.current.value,
+      });
+    }
+  };
 
   const text = '';
   let starRatingCount = 10;
@@ -76,7 +106,7 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
       <section className="film-card film-card--full">
         <div className="film-card__header">
           <div className="film-card__bg">
-            <img src={poster} alt={title} />
+            <img src={bigPoster} alt={title} />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -96,7 +126,7 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
                   <a href="film-page.html" className="breadcrumbs__link">{title}</a>
                 </li>
                 <li className="breadcrumbs__item">
-                  <button className="breadcrumbs__link">Add review</button>
+                  <a href="#" className="breadcrumbs__link">Add review</a>
                 </li>
               </ul>
             </nav>
@@ -108,7 +138,16 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
                 </div>
               </li>
               <li className="user-block__item">
-                <button className="user-block__link">Sign out</button>
+                <Link
+                  className="user-block__link"
+                  onClick={(evt) => {
+                    evt.preventDefault();
+                    requireLogout();
+                  }}
+                  to='/'
+                >
+                  Sign out
+                </Link>
               </li>
             </ul>
           </header>
@@ -119,11 +158,14 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
         </div>
 
         <div className="add-review">
-          <form action="#" className="add-review__form"
-            onSubmit={(evt: FormEvent<HTMLFormElement>) => {
-              evt.preventDefault();
-              onReviewInput(starRating, text);
-            }}
+          <form
+            action="#"
+            className="add-review__form"
+            onSubmit={handleSubmit}
+            // onSubmit={(evt: FormEvent<HTMLFormElement>) => {
+            //   evt.preventDefault();
+            //   onReviewInput(starRating, text);
+            // }}
           >
             <div className="rating">
               <div className="rating__stars">
@@ -131,8 +173,10 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
                   const keyValue = `${id}`;
                   return(
                     <>
-                      <input key={keyValue} className="rating__input" id={`star-${star}`} type="radio" name="rating" value={`star-${star}`}
-                        checked={rating[id]}
+                      <input
+                        ref={starRatingRef}
+                        key={keyValue} className="rating__input" id={`star-${star}`} type="radio" name="rating" value={`star-${star}`}
+                        // checked={rating[id]}
                         onChange={({target}: ChangeEvent<HTMLInputElement>) => {
                           const value = target.checked;
                           setRating([...rating.slice(0, id), value, ...rating.slice(id + 1)]);
@@ -145,9 +189,20 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
               </div>
             </div>
 
-
             <div className="add-review__text">
-              <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text">{text}</textarea>
+              <input>
+                ref={textRef}
+                <textarea
+                  className="add-review__textarea"
+                  name="review-text"
+                  id="review-text"
+                  placeholder="Review text"
+                  minLength={50}
+                  maxLength={400}
+                >
+                  {text}
+                </textarea>
+              </input>
               <div className="add-review__submit">
                 <button
                   onClick={() => history.push(AppRoute.Film)}

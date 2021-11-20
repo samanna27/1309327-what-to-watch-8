@@ -4,11 +4,12 @@ import SmallFilmCard from '../small-film-card/small-film-card';
 import Tabs from '../tabs/tabs';
 import {connect, ConnectedProps} from 'react-redux';
 import {State} from '../../types/state';
-import {fetchFilmDataAction, fetchSimilarFilmsAction, logoutAction} from '../../store/api-actions';
+import {fetchFilmDataAction, fetchSimilarFilmsAction, fetchCommentsAction, logoutAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
 import {store} from '../../index';
 import {Film} from '../../types/film';
 import Loader from 'react-loader-spinner';
+import { AppRoute} from '../../const';
 
 type FilmScreenProps = {
   film: Film | null,
@@ -18,9 +19,11 @@ type FilmScreenRouteParams = {
   id: string
 }
 
-const mapStateToProps = ({currentFilm, similarFilms}: State) => ({
+const mapStateToProps = ({currentFilm, currentId, similarFilms, authorizationStatus}: State) => ({
   similarFilms,
   currentFilm,
+  currentId,
+  authorizationStatus,
 });
 
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
@@ -36,13 +39,14 @@ type ConnectedComponentProps = PropsFromRedux & FilmScreenProps;
 
 // film - from props
 // currentFilm - store
-function FilmScreen({ film, similarFilms, currentFilm, requireLogout}: ConnectedComponentProps):JSX.Element {
+function FilmScreen({ film, similarFilms, currentFilm, currentId, requireLogout, authorizationStatus}: ConnectedComponentProps):JSX.Element {
   const exit = '';
   const params = useParams<FilmScreenRouteParams>();
   const filmId = params.id;
   if (film === null && currentFilm === null) {
     (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction(filmId));
-    (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction(filmId));
+    (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction(filmId, currentId));
+    (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(filmId));
     return (
       <Loader type="Puff"
         color="#00BFFF"
@@ -53,18 +57,23 @@ function FilmScreen({ film, similarFilms, currentFilm, requireLogout}: Connected
   }
   const { id, poster, title, bigPoster, genre, releaseDate } = film || currentFilm || {};
 
-  // if (id) {
+  if ( similarFilms && id !== currentId) {
   // eslint-disable-next-line
-     console.log(123);
-  (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction(filmId));
-  // return (
-  //   <Loader type="Puff"
-  //     color="#00BFFF"
-  //     height={500}
-  //     width={500}
-  //   />
-  // );
-  // }
+  console.log(123);
+    if (id === undefined) {
+      return <div>No data</div>;
+    }
+    currentId = +id;
+    (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction(filmId, currentId));
+    (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(filmId));
+    return (
+      <Loader type="Puff"
+        color="#00BFFF"
+        height={500}
+        width={500}
+      />
+    );
+  }
 
   return (
     <>
@@ -153,7 +162,9 @@ function FilmScreen({ film, similarFilms, currentFilm, requireLogout}: Connected
                   </svg>
                   <span>My list</span>
                 </button>
-                <a href="add-review.html" className="btn film-card__button">Add review</a>
+                { authorizationStatus === 'AUTH' ?
+                  <Link to={AppRoute.AddReview} className="btn film-card__button">Add review</Link>:
+                  <Link to={AppRoute.SignIn}className="btn film-card__button">Add review</Link>}
               </div>
             </div>
           </div>

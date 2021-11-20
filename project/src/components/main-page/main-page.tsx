@@ -9,13 +9,14 @@ import {ThunkAppDispatch} from '../../types/action';
 import {logoutAction} from '../../store/api-actions';
 import {State} from '../../types/state';
 
-type MainPageProps = {
-  promoFilmTitle: string;
-  promoFilmGenre: string;
-  promoFilmDate: number;
-}
+// type MainPageProps = {
+//   promoFilmTitle: string;
+//   promoFilmGenre: string;
+//   promoFilmDate: number;
+// }
 
-const mapStateToProps = ({films, genre, renderedFilms}: State) => ({
+const mapStateToProps = ({promoFilm, films, genre, renderedFilms}: State) => ({
+  promoFilm,
   films,
   genre,
   renderedFilms,
@@ -29,10 +30,10 @@ const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & MainPageProps;
+type ConnectedComponentProps = PropsFromRedux;
 
 function MainPage(props: ConnectedComponentProps): JSX.Element {
-  const {films, renderedFilms, genre, promoFilmTitle, promoFilmGenre, promoFilmDate, requireLogout}=props;
+  const {promoFilm, films, renderedFilms, genre, requireLogout}=props;
   let filmsLength = 0;
 
   return (
@@ -76,14 +77,24 @@ function MainPage(props: ConnectedComponentProps): JSX.Element {
             </div>
 
             <div className="film-card__desc">
-              <h2 className="film-card__title">{promoFilmTitle}</h2>
+              <h2 className="film-card__title">{promoFilm === null ? '' : promoFilm.title}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">{promoFilmGenre}</span>
-                <span className="film-card__year">{promoFilmDate}</span>
+                <span className="film-card__genre">{promoFilm === null ? '' : promoFilm.genre}</span>
+                <span className="film-card__year">{promoFilm === null ? '' : promoFilm.releaseDate}</span>
               </p>
 
               <div className="film-card__buttons">
-                <button className="btn btn--play film-card__button" type="button">
+                <button
+                  className="btn btn--play film-card__button"
+                  type="button"
+                  onClick={()=>{
+                    // <VideoPlayer film={film} isPlaying={isPlaying} />;
+                    //   <h3 className="small-film-card__title">
+                    //     {title}
+                    //   </h3>
+                    // </Link>
+                  }}
+                >
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>

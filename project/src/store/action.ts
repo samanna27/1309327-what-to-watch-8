@@ -30,10 +30,17 @@ export const loadFilmData = (currentFilm: Film) => ({
   },
 } as const);
 
-export const loadSimilarFilms = (similarFilms: Film[]) => ({
+export const loadPromoFilmData = (promoFilm: Film) => ({
+  type: ActionType.LoadFilmData,
+  payload: {
+    promoFilm,
+  },
+} as const);
+
+export const loadSimilarFilms = (similarFilms: Film[] | null, currentId: number) => ({
   type: ActionType.LoadSimilarFilms,
   payload: {
-    similarFilms,
+    similarFilms, currentId,
   },
 } as const);
 
@@ -44,7 +51,7 @@ export const loadComments = (comments: FilmReview[]) => ({
   },
 } as const);
 
-export const addComment = (comment: FilmReview) => ({
+export const addComment = (comment: {rating: number, text: string}) => ({
   type: ActionType.AddComment,
   payload: {
     comment,

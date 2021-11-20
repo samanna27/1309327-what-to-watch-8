@@ -4,12 +4,24 @@ import FilmDetails from '../film-details/film-details';
 import FilmReview from '../film-review/film-review';
 import {useState} from 'react';
 import { Link } from 'react-router-dom';
+import {connect, ConnectedProps} from 'react-redux';
+import {State} from '../../types/state';
+
 
 type TabsProps = {
   film: Film | null;
 }
 
-function Tabs({film}: TabsProps):JSX.Element {
+const mapStateToProps = ({authorizationStatus}: State) => ({
+  authorizationStatus,
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & TabsProps;
+
+function Tabs({film, authorizationStatus}: ConnectedComponentProps):JSX.Element {
 
   const [isVisibleFilmOverview, setVisibleFilmOverview] = useState(true);
   const [isVisibleFilmDetails, setVisibleFilmDetails] = useState(false);
@@ -20,7 +32,9 @@ function Tabs({film}: TabsProps):JSX.Element {
     setVisibleFilmReviews((prevState) => false);
     document.querySelectorAll('.film-nav__item')[0].classList.add('film-nav__item--active');
     document.querySelectorAll('.film-nav__item')[1].classList.remove('film-nav__item--active');
-    document.querySelectorAll('.film-nav__item')[2].classList.remove('film-nav__item--active');
+    if (authorizationStatus === 'AUTH') {
+      document.querySelectorAll('.film-nav__item')[2].classList.remove('film-nav__item--active');
+    }
   };
 
   const addFilmDetails = function () {
@@ -28,7 +42,9 @@ function Tabs({film}: TabsProps):JSX.Element {
     setVisibleFilmReviews((prevState) => false);
     document.querySelectorAll('.film-nav__item')[1].classList.add('film-nav__item--active');
     document.querySelectorAll('.film-nav__item')[0].classList.remove('film-nav__item--active');
-    document.querySelectorAll('.film-nav__item')[2].classList.remove('film-nav__item--active');
+    if (authorizationStatus === 'AUTH') {
+      document.querySelectorAll('.film-nav__item')[2].classList.remove('film-nav__item--active');
+    }
   };
 
   const addFilmReview = function () {
@@ -51,9 +67,11 @@ function Tabs({film}: TabsProps):JSX.Element {
             <li className="film-nav__item">
               <a href="#" className="film-nav__link">Details</a>
             </li>
-            <li className="film-nav__item">
-              <a href="#" className="film-nav__link">Reviews</a>
-            </li>
+            { authorizationStatus === 'AUTH' ?
+              <li className="film-nav__item">
+                <a href="#" className="film-nav__link">Reviews</a>
+              </li> :
+              <div></div>}
           </ul> :
           <ul className="film-nav__list">
             <li className="film-nav__item film-nav__item--active">
@@ -65,6 +83,7 @@ function Tabs({film}: TabsProps):JSX.Element {
               Overview
               </Link>
             </li>
+            {}
             <li className="film-nav__item">
               <Link to={`/films/${film.id}`} className="film-nav__link" onClick={() => {
                 setVisibleFilmDetails((prevState) => true);
@@ -74,24 +93,27 @@ function Tabs({film}: TabsProps):JSX.Element {
               Details
               </Link>
             </li>
-            <li className="film-nav__item">
-              <Link to={`/films/${film.id}`} className="film-nav__link" onClick={() => {
-                setVisibleFilmReviews((prevState) => true);
-                addFilmReview();
-              }}
-              >
-              Reviews
-              </Link>
-            </li>
+            { authorizationStatus === 'AUTH' ?
+              <li className="film-nav__item">
+                <Link to={`/films/${film.id}`} className="film-nav__link" onClick={() => {
+                  setVisibleFilmReviews((prevState) => true);
+                  addFilmReview();
+                }}
+                >
+                Reviews
+                </Link>
+              </li>:
+              <div></div>}
           </ul>}
       </nav>
 
       {isVisibleFilmOverview && <FilmOverview film={film}  />}
       {isVisibleFilmDetails && <FilmDetails film={film} />}
-      {isVisibleFilmReviews && <FilmReview/>}
+      {isVisibleFilmReviews && <FilmReview film={film}/>}
 
     </div>
   );
 }
 
-export default Tabs;
+export {Tabs};
+export default connector(Tabs);

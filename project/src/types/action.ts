@@ -12,6 +12,7 @@ import {
   resetFilmList,
   loadFilms,
   loadFilmData,
+  loadPromoFilmData,
   loadSimilarFilms,
   loadComments,
   addComment,
@@ -26,6 +27,7 @@ export enum ActionType {
   ResetFilmList = 'main/ResetFilmList',
   LoadFilms = 'data/loadFilms',
   LoadFilmData = 'data/loadFilmData',
+  LoadPromoFilmData = 'data/loadPromoFilmData',
   LoadSimilarFilms = 'data/loadSimilarFilms',
   LoadComments = 'data/loadComments',
   AddComment = 'data/addComment',
@@ -40,6 +42,7 @@ export type Actions =
  | ReturnType<typeof resetFilmList>
  | ReturnType<typeof loadFilms>
  | ReturnType<typeof loadFilmData>
+ | ReturnType<typeof loadPromoFilmData>
  | ReturnType<typeof loadSimilarFilms>
  | ReturnType<typeof loadComments>
  | ReturnType<typeof addComment>

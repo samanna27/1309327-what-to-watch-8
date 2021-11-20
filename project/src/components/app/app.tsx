@@ -8,33 +8,37 @@ import PlayerScreen from '../player-screen/player-screen';
 import FilmScreen from '../film-screen/film-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import PrivateRoute from '../private-route/private-route';
-import {Film} from '../../types/film';
+// import {Film} from '../../types/film';
 import LoadingScreen from '../loading-screen/loading-screen';
 import {State} from '../../types/state';
 import browserHistory from '../../browser-history';
+import AddReviewScreen from '../add-review-screen/add-review-screen';
 
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
-const mapStateToProps = ({authorizationStatus, isDataLoaded, films}: State) => ({
+const mapStateToProps = ({authorizationStatus, isDataLoaded, films, promoFilm, currentId, comment}: State) => ({
   authorizationStatus,
   isDataLoaded,
   films,
+  promoFilm,
+  currentId,
+  comment,
 });
 
 const connector = connect(mapStateToProps);
 
-type AppScreenProps = {
-  promoFilmTitle: string;
-  promoFilmGenre: string;
-  promoFilmDate: number;
-  films: Film[];
-}
+// type AppScreenProps = {
+//   promoFilmTitle: string;
+//   promoFilmGenre: string;
+//   promoFilmDate: number;
+//   films: Film[];
+// }
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & AppScreenProps;
+type ConnectedComponentProps = PropsFromRedux;
 
 function App(props: ConnectedComponentProps): JSX.Element {
-  const {promoFilmTitle, promoFilmGenre, promoFilmDate, films, authorizationStatus, isDataLoaded} = props;
+  const { films, authorizationStatus, isDataLoaded, currentId} = props;
 
   if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
     return (
@@ -46,9 +50,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
     <BrowserRouter history={browserHistory}>
       <Switch>
         <Route exact path={AppRoute.Main}>
-          <MainPage
-            promoFilmTitle={promoFilmTitle} promoFilmGenre={promoFilmGenre} promoFilmDate={promoFilmDate}
-          />
+          <MainPage />
         </Route>
         <Route exact path={AppRoute.SignIn}>
           <SignInScreen />
@@ -59,13 +61,25 @@ function App(props: ConnectedComponentProps): JSX.Element {
           render={()=><MyListScreen films={films}/>}
         >
         </PrivateRoute>
+        <PrivateRoute exact path={AppRoute.AddReview} render={() => {
+          const commentedFilm = films.find((film) => film.id === currentId);
+          if( commentedFilm) {
+            return <AddReviewScreen film={commentedFilm}/>;
+          } else {
+            // eslint-disable-next-line
+            console.log(123);
+            return <AddReviewScreen film={films[1]}/>;
+          }
+        }}
+        >
+        </PrivateRoute>
         <Route exact path={AppRoute.Player}>
           <PlayerScreen films={films}/>
         </Route>
         <Route exact path={AppRoute.Film} render={(params) => {
           const filmId = parseInt(params.match.params.id, 10);
           const matchedFilm = films.find((film) => film.id === filmId);
-          if ( matchedFilm) {
+          if ( matchedFilm ) {
             return <FilmScreen film={matchedFilm}/>;
           } else {
             // eslint-disable-next-line
