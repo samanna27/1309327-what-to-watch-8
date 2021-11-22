@@ -4,12 +4,13 @@ import SmallFilmCard from '../small-film-card/small-film-card';
 import Tabs from '../tabs/tabs';
 import {connect, ConnectedProps} from 'react-redux';
 import {State} from '../../types/state';
-import {fetchFilmDataAction, fetchSimilarFilmsAction, fetchCommentsAction, logoutAction} from '../../store/api-actions';
+import {fetchFilmDataAction, fetchSimilarFilmsAction, fetchCommentsAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
 import {store} from '../../index';
 import {Film} from '../../types/film';
 import Loader from 'react-loader-spinner';
-import { AppRoute} from '../../const';
+import SvgLogo from '../svg-logo/svg-logo';
+import LoginLogout from '../login-logout/login-logout';
 
 type FilmScreenProps = {
   film: Film | null,
@@ -19,27 +20,18 @@ type FilmScreenRouteParams = {
   id: string
 }
 
-const mapStateToProps = ({currentFilm, currentId, similarFilms, authorizationStatus}: State) => ({
+const mapStateToProps = ({currentFilm, currentId, similarFilms}: State) => ({
   similarFilms,
   currentFilm,
   currentId,
-  authorizationStatus,
 });
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  requireLogout() {
-    dispatch(logoutAction());
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & FilmScreenProps;
 
-// film - from props
-// currentFilm - store
-function FilmScreen({ film, similarFilms, currentFilm, currentId, requireLogout, authorizationStatus}: ConnectedComponentProps):JSX.Element {
+function FilmScreen({ film, similarFilms, currentFilm, currentId}: ConnectedComponentProps):JSX.Element {
   const exit = '';
   const params = useParams<FilmScreenRouteParams>();
   const filmId = params.id;
@@ -58,8 +50,6 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId, requireLogout,
   const { id, poster, title, bigPoster, genre, releaseDate } = film || currentFilm || {};
 
   if ( similarFilms && id !== currentId) {
-  // eslint-disable-next-line
-  console.log(123);
     if (id === undefined) {
       return <div>No data</div>;
     }
@@ -77,37 +67,7 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId, requireLogout,
 
   return (
     <>
-      <div className="visually-hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-          <symbol id="add" viewBox="0 0 19 20">
-            <title>+</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <polygon id="+" fill="#EEE5B5" points="10.777832 11.2880859 10.777832 19.5527344 8.41650391 19.5527344 8.41650391 11.2880859 0.627929688 11.2880859 0.627929688 8.92675781 8.41650391 8.92675781 8.41650391 0.662109375 10.777832 0.662109375 10.777832 8.92675781 18.5664062 8.92675781 18.5664062 11.2880859"/>
-            </g>
-          </symbol>
-          <symbol id="full-screen" viewBox="0 0 27 27">
-            <path fillRule="evenodd" clipRule="evenodd" d="M23.8571 0H16V3.14286H23.8571V11H27V3.14286V0H23.8571Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M27 23.8571V16H23.8571V23.8571H16V27H23.8571H27L27 23.8571Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M0 3.14286L0 11H3.14286L3.14286 3.14286L11 3.14286V0H3.14286H0L0 3.14286Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M3.14286 27H11V23.8571H3.14286L3.14286 16H0L0 23.8571V27H3.14286Z" fill="#FFF9D9" fillOpacity="0.7"/>
-          </symbol>
-          <symbol id="in-list" viewBox="0 0 18 14">
-            <path fillRule="evenodd" clipRule="evenodd" d="M2.40513 5.35353L6.1818 8.90902L15.5807 0L18 2.80485L6.18935 14L0 8.17346L2.40513 5.35353Z" fill="#EEE5B5"/>
-          </symbol>
-          <symbol id="pause" viewBox="0 0 14 21">
-            <symbol id="play-s" viewBox="0 0 19 19">
-              <path fillRule="evenodd" clipRule="evenodd" d="M0 0L19 9.5L0 19V0Z" fill="#EEE5B5" />
-            </symbol>
-            <title>Artboard</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Artboard" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <polygon id="Line" fill="#EEE5B5" fillRule="nonzero" points="0 -1.11910481e-13 4 -1.11910481e-13 4 21 0 21"/>
-              <polygon id="Line" fill="#EEE5B5" fillRule="nonzero" points="10 -1.11910481e-13 14 -1.11910481e-13 14 21 10 21"/>
-            </g>
-          </symbol>
-        </svg>
-      </div>
+      <SvgLogo />
 
       <section className="film-card film-card--full" key={id}>
         <div className="film-card__hero">
@@ -120,25 +80,7 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId, requireLogout,
           <header className="page-header film-card__head">
             <Logo />
 
-            <ul className="user-block">
-              <li className="user-block__item">
-                <div className="user-block__avatar">
-                  <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-                </div>
-              </li>
-              <li className="user-block__item">
-                <Link
-                  className="user-block__link"
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    requireLogout();
-                  }}
-                  to='/'
-                >
-                  Sign out
-                </Link>
-              </li>
-            </ul>
+            <LoginLogout />
           </header>
 
           <div className="film-card__wrap">
@@ -162,9 +104,7 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId, requireLogout,
                   </svg>
                   <span>My list</span>
                 </button>
-                { authorizationStatus === 'AUTH' ?
-                  <Link to={AppRoute.AddReview} className="btn film-card__button">Add review</Link>:
-                  <Link to={AppRoute.SignIn}className="btn film-card__button">Add review</Link>}
+                <Link to={`/films/${id}/review`} className="btn film-card__button">Add review</Link>
               </div>
             </div>
           </div>

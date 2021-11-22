@@ -7,7 +7,7 @@ import {Provider} from 'react-redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import App from './components/app/app';
 import {reducer} from './store/reducer';
-import { requireAuthorization} from './store/action';
+import {requireAuthorization} from './store/action';
 import {fetchFilmsAction, checkAuthAction, fetchPromoFilmAction} from './store/api-actions';
 import {ThunkAppDispatch} from './types/action';
 import {AuthorizationStatus} from './const';
@@ -16,12 +16,6 @@ import {redirect} from './store/middlewares/redirect';
 const api = createAPI(
   () => store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth)),
 );
-
-// const PromoFilmData = {
-//   PROMO_FILM_TITLE: 'The Grand Budapest Hotel',
-//   PROMO_FILM_GENRE: 'Drama',
-//   PROMO_FILM_DATE: 2014,
-// };
 
 export const store = createStore(
   reducer,

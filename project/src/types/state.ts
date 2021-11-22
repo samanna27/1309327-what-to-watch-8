@@ -16,4 +16,5 @@ export type State = {
   authorizationStatus: AuthorizationStatus,
   isDataLoaded: boolean,
   renderedFilms: number,
+  userEmail: string,
 };

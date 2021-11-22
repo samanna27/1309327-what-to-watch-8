@@ -1,19 +1,15 @@
-import {Link} from 'react-router-dom';
 import {connect, ConnectedProps} from 'react-redux';
 import React from 'react';
 import Logo from '../logo/logo';
 import GenresList from '../genres-list/genres-list';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import ShowMoreButton from '../show-more-button/show-more-button';
-import {ThunkAppDispatch} from '../../types/action';
-import {logoutAction} from '../../store/api-actions';
 import {State} from '../../types/state';
-
-// type MainPageProps = {
-//   promoFilmTitle: string;
-//   promoFilmGenre: string;
-//   promoFilmDate: number;
-// }
+import LoginLogout from '../login-logout/login-logout';
+import {fetchToggleFavoriteAction} from '../../store/api-actions';
+import {ThunkAppDispatch} from '../../types/action';
+import {store} from '../../index';
+import MyListButton from '../my-list-button/my-list-button';
 
 const mapStateToProps = ({promoFilm, films, genre, renderedFilms}: State) => ({
   promoFilm,
@@ -22,25 +18,23 @@ const mapStateToProps = ({promoFilm, films, genre, renderedFilms}: State) => ({
   renderedFilms,
 });
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  requireLogout() {
-    dispatch(logoutAction());
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
 function MainPage(props: ConnectedComponentProps): JSX.Element {
-  const {promoFilm, films, renderedFilms, genre, requireLogout}=props;
+  const {promoFilm, films, renderedFilms, genre}=props;
   let filmsLength = 0;
+  const handleClick = ()=>{
+    if (promoFilm !== null) {
+      (store.dispatch as ThunkAppDispatch)(fetchToggleFavoriteAction(promoFilm.id, Number(!promoFilm.addedToWatchList)));
+    }};
 
   return (
     <React.Fragment>
       <section className="film-card">
         <div className="film-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel" />
+          <img src="img/bg-the-grand-budapest-hotel.jpg" alt={promoFilm === null ? '' : promoFilm.title} />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -48,32 +42,13 @@ function MainPage(props: ConnectedComponentProps): JSX.Element {
         <header className="page-header film-card__head">
           <Logo />
 
-          <ul className="user-block">
-            <li className="user-block__item">
-              <div className="user-block__avatar">
-                <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-              </div>
-            </li>
-            <li className="user-block__item">
-              <Link
-                className="user-block__link"
-                onClick={(evt) => {
-                  evt.preventDefault();
-
-                  requireLogout();
-                }}
-                to='/'
-              >
-                Sign out
-              </Link>
-            </li>
-          </ul>
+          <LoginLogout />
         </header>
 
         <div className="film-card__wrap">
           <div className="film-card__info">
             <div className="film-card__poster">
-              <img src="img/the-grand-budapest-hotel-poster.jpg" alt="The Grand Budapest Hotel poster" width="218" height="327" />
+              <img src={promoFilm === null ? '' : promoFilm.poster} alt={promoFilm === null ? '' : `${promoFilm.title} poster`} width="218" height="327" />
             </div>
 
             <div className="film-card__desc">
@@ -100,11 +75,11 @@ function MainPage(props: ConnectedComponentProps): JSX.Element {
                   </svg>
                   <span>Play</span>
                 </button>
-                <button className="btn btn--list film-card__button" type="button">
-                  <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
-                  </svg>
-                  <span>My list</span>
+                <button className="btn btn--list film-card__button" type="button" onClick={handleClick}>
+                  <MyListButton />
+                  <span>
+                    My list
+                  </span>
                 </button>
               </div>
             </div>

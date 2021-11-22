@@ -19,7 +19,11 @@ function VideoPlayer({film, isPlaying}: VideoPlayerProps): JSX.Element {
     }
 
     if (isPlaying) {
-      videoRef.current.play();
+      setTimeout(() => {
+        if (videoRef.current !== null) {
+          videoRef.current.play();
+        }
+      }, 1000);
     }
   }, [isPlaying]);
 
@@ -34,7 +38,6 @@ function VideoPlayer({film, isPlaying}: VideoPlayerProps): JSX.Element {
           src={previewVideoLink}
           ref={videoRef}
           width="280"
-          controls
           muted
           poster={previewImage}
           preload="auto"

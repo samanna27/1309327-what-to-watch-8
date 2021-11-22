@@ -17,6 +17,7 @@ const initialState = {
   authorizationStatus: AuthorizationStatus.Unknown,
   isDataLoaded: false,
   renderedFilms: 8,
+  userEmail: '',
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -65,6 +66,27 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {...state, authorizationStatus: AuthorizationStatus.NoAuth};
     case ActionType.ResetFilmList:
       return {...initialState};
+    case ActionType.ChangeUserEmail: {
+      const userEmail = action.payload;
+      return {...state, userEmail};
+    }
+    case ActionType.UpdateFilmsData: {
+      const updatedFilm = action.payload;
+      const films = state.films;
+      const promoFilm = state.promoFilm;
+      if(updatedFilm !== null) {
+        const updatedFilmId = updatedFilm.id;
+        const matchedFilm = films.find((film) => film.id === updatedFilmId);
+        if (matchedFilm) {
+          const idx = films.indexOf(matchedFilm);
+          films.splice(idx,1,updatedFilm);
+        }
+        if (promoFilm?.id && promoFilm.id=== updatedFilmId) {
+          promoFilm.addedToWatchList = updatedFilm.addedToWatchList;
+        }
+      }
+      return {...state, films, promoFilm};
+    }
     default:
       return state;
   }

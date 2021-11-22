@@ -1,5 +1,5 @@
 import {ThunkActionResult} from '../types/action';
-import {loadFilms, loadFilmData, loadPromoFilmData, loadSimilarFilms, loadComments, addComment, redirectToRoute, requireAuthorization, requireLogout} from './action';
+import {loadFilms, loadFilmData, loadPromoFilmData, loadSimilarFilms, loadComments, addComment, redirectToRoute, requireAuthorization, requireLogout, changeUserEmail, updateFilmsData} from './action';
 import {saveToken, dropToken, Token} from '../services/token';
 import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
 import {Film, FilmReview} from '../types/film';
@@ -36,17 +36,29 @@ export const fetchCommentsAction = (filmId: string): ThunkActionResult =>
     dispatch(loadComments(data));
   };
 
-export const fetchPostCommentAction = (comment: {rating: number, text: string}): ThunkActionResult =>
+export const fetchPostCommentAction = (comment: {rating: number, text: string}, id: number): ThunkActionResult =>
   async (dispatch, _getState, api) => {
-    const {data: {token}} = await api.post<{token: Token}>(APIRoute.Comments, comment);
+    //eslint-disable-next-line
+    console.log(id, `/comments/${id}`);
+    const {data: {token}} = await api.post<{token: Token}>(`/comments/${id}`, comment);
     saveToken(token);
     dispatch(addComment(comment));
   };
 
+export const fetchToggleFavoriteAction = (filmId: number, status: number): ThunkActionResult =>
+  async (dispatch, _getState, api) => {
+    const {data} = await api.post<Film>(`/favorite/${filmId}/${status}`);
+    if(data) {
+      //eslint-disable-next-line
+      console.log(data);
+      dispatch(updateFilmsData(adaptToClient(data)));}
+  };
+
 export const checkAuthAction = (): ThunkActionResult =>
   async (dispatch, _getState, api) => {
+
     await api.get(APIRoute.Login)
-      .then(() => {
+      .then((data) => {
         dispatch(requireAuthorization(AuthorizationStatus.Auth));
         dispatch(redirectToRoute(AppRoute.Main));
       });
@@ -57,6 +69,7 @@ export const loginAction = ({login: email, password}: AuthData): ThunkActionResu
     const {data: {token}} = await api.post<{token: Token}>(APIRoute.Login, {email, password});
     saveToken(token);
     dispatch(requireAuthorization(AuthorizationStatus.Auth));
+    dispatch(redirectToRoute(AppRoute.Main));
   };
 
 export const logoutAction = (): ThunkActionResult =>
@@ -64,4 +77,6 @@ export const logoutAction = (): ThunkActionResult =>
     api.delete(APIRoute.Logout);
     dropToken();
     dispatch(requireLogout());
+    dispatch(changeUserEmail(''));
+    dispatch(redirectToRoute(AppRoute.Main));
   };

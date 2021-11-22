@@ -4,7 +4,7 @@ type FilmDetailsProps = {
   film: Film | null;
 }
 
-export const transferMinutesToDurationString = (minutes: number) => {
+const transferMinutesToDurationString = (minutes: number) => {
   const hours = minutes / 60;
   const min = minutes % 60;
 

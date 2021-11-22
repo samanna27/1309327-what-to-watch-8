@@ -1,40 +1,44 @@
 import Logo from '../logo/logo';
 import {useRef, FormEvent} from 'react';
-import {useHistory} from 'react-router-dom';
 import {connect, ConnectedProps} from 'react-redux';
 import {loginAction} from '../../store/api-actions';
+import {changeUserEmail} from '../../store/action';
+import {Actions} from '../../types/action';
 import {ThunkAppDispatch} from '../../types/action';
-import {AuthData} from '../../types/auth-data';
-import {AppRoute} from '../../const';
+import {State} from '../../types/state';
+import {bindActionCreators, Dispatch} from 'redux';
+import {store} from '../../index';
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onSubmit(authData: AuthData) {
-    dispatch(loginAction(authData));
-  },
+const mapStateToProps = ({userEmail}: State) => ({
+  userEmail,
 });
 
-const connector = connect(null, mapDispatchToProps);
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
+  onLoginSubmit: changeUserEmail,
+}, dispatch);
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function SignInScreen(props: PropsFromRedux):JSX.Element {
-  const {onSubmit} = props;
+  const {onLoginSubmit} = props;
 
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
-
-  const history = useHistory();
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
     if (loginRef.current !== null && passwordRef.current !== null) {
-      onSubmit({
+      (store.dispatch as ThunkAppDispatch)(loginAction({
         login: loginRef.current.value,
         password: passwordRef.current.value,
-      });
+      }));
+      onLoginSubmit(loginRef.current.value);
     }
   };
+
 
   return (
     <>
@@ -76,7 +80,7 @@ function SignInScreen(props: PropsFromRedux):JSX.Element {
 
         <div className="sign-in user-page__content">
           <form
-            action="#"
+            action=""
             className="sign-in__form"
             onSubmit={handleSubmit}
           >
@@ -106,7 +110,6 @@ function SignInScreen(props: PropsFromRedux):JSX.Element {
             </div>
             <div className="sign-in__submit">
               <button
-                onClick={() => history.push(AppRoute.MyList)}
                 className="sign-in__btn"
                 type="submit"
               >

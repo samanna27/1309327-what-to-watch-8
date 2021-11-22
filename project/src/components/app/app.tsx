@@ -8,7 +8,6 @@ import PlayerScreen from '../player-screen/player-screen';
 import FilmScreen from '../film-screen/film-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import PrivateRoute from '../private-route/private-route';
-// import {Film} from '../../types/film';
 import LoadingScreen from '../loading-screen/loading-screen';
 import {State} from '../../types/state';
 import browserHistory from '../../browser-history';
@@ -28,17 +27,13 @@ const mapStateToProps = ({authorizationStatus, isDataLoaded, films, promoFilm, c
 
 const connector = connect(mapStateToProps);
 
-// type AppScreenProps = {
-//   promoFilmTitle: string;
-//   promoFilmGenre: string;
-//   promoFilmDate: number;
-//   films: Film[];
-// }
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
 function App(props: ConnectedComponentProps): JSX.Element {
   const { films, authorizationStatus, isDataLoaded, currentId} = props;
+  // eslint-disable-next-line
+  console.log(isCheckedAuth(authorizationStatus), authorizationStatus);
 
   if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
     return (
@@ -66,8 +61,6 @@ function App(props: ConnectedComponentProps): JSX.Element {
           if( commentedFilm) {
             return <AddReviewScreen film={commentedFilm}/>;
           } else {
-            // eslint-disable-next-line
-            console.log(123);
             return <AddReviewScreen film={films[1]}/>;
           }
         }}
@@ -82,8 +75,6 @@ function App(props: ConnectedComponentProps): JSX.Element {
           if ( matchedFilm ) {
             return <FilmScreen film={matchedFilm}/>;
           } else {
-            // eslint-disable-next-line
-            console.log(123);
             return <FilmScreen film={null}/>;
           }
         }}

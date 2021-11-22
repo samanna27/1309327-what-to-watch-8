@@ -31,7 +31,7 @@ export const loadFilmData = (currentFilm: Film) => ({
 } as const);
 
 export const loadPromoFilmData = (promoFilm: Film) => ({
-  type: ActionType.LoadFilmData,
+  type: ActionType.LoadPromoFilmData,
   payload: {
     promoFilm,
   },
@@ -70,4 +70,14 @@ export const requireLogout = () => ({
 export const redirectToRoute = (url: AppRoute) => ({
   type: ActionType.RedirectToRoute,
   payload: url,
+} as const);
+
+export const changeUserEmail = (userEmail: string) => ({
+  type: ActionType.ChangeUserEmail,
+  payload: userEmail,
+} as const);
+
+export const updateFilmsData = (film: Film) => ({
+  type: ActionType.UpdateFilmsData,
+  payload: film,
 } as const);
