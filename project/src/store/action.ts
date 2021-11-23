@@ -51,10 +51,11 @@ export const loadComments = (comments: FilmReview[]) => ({
   },
 } as const);
 
-export const addComment = (comment: {rating: number, text: string}) => ({
+export const addComment = (comment: FilmReview, id: number) => ({
   type: ActionType.AddComment,
   payload: {
     comment,
+    id,
   },
 } as const);
 

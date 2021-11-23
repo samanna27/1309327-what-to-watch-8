@@ -2,6 +2,9 @@ import {Actions, ActionType} from '../types/action';
 import {State} from '../types/state';
 import {AuthorizationStatus} from '../const';
 import {Film} from '../types/film';
+import {store} from '../index';
+import {fetchCommentsAction} from '../store/api-actions';
+import {ThunkAppDispatch} from '../types/action';
 
 const movies = [] as Film[];
 
@@ -13,7 +16,7 @@ const initialState = {
   currentId: -1,
   similarFilms: movies,
   comments: [],
-  comment: {rating: 0, text: ''},
+  comment: null,
   authorizationStatus: AuthorizationStatus.Unknown,
   isDataLoaded: false,
   renderedFilms: 8,
@@ -53,8 +56,9 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {...state, comments};
     }
     case ActionType.AddComment: {
-      const {comment} = action.payload;
-      return {...state, comment};
+      const id = action.payload.id;
+      (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(id.toString()));
+      return {...state};
     }
     case ActionType.RequireAuthorization:
       return {
@@ -72,8 +76,8 @@ const reducer = (state: State = initialState, action: Actions): State => {
     }
     case ActionType.UpdateFilmsData: {
       const updatedFilm = action.payload;
-      const films = state.films;
-      const promoFilm = state.promoFilm;
+      const films = state.films.slice();
+      const promoFilm = Object.assign({}, state.promoFilm);
       if(updatedFilm !== null) {
         const updatedFilmId = updatedFilm.id;
         const matchedFilm = films.find((film) => film.id === updatedFilmId);

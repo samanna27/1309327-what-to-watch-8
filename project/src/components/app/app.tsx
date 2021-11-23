@@ -16,11 +16,12 @@ import AddReviewScreen from '../add-review-screen/add-review-screen';
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
-const mapStateToProps = ({authorizationStatus, isDataLoaded, films, promoFilm, currentId, comment}: State) => ({
+const mapStateToProps = ({authorizationStatus, isDataLoaded, films, promoFilm, currentFilm, currentId, comment}: State) => ({
   authorizationStatus,
   isDataLoaded,
   films,
   promoFilm,
+  currentFilm,
   currentId,
   comment,
 });
@@ -31,9 +32,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
 function App(props: ConnectedComponentProps): JSX.Element {
-  const { films, authorizationStatus, isDataLoaded, currentId} = props;
-  // eslint-disable-next-line
-  console.log(isCheckedAuth(authorizationStatus), authorizationStatus);
+  const { films, authorizationStatus, isDataLoaded, promoFilm, currentFilm, currentId} = props;
 
   if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
     return (
@@ -53,7 +52,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
         <PrivateRoute
           exact
           path={AppRoute.MyList}
-          render={()=><MyListScreen films={films}/>}
+          render={()=><MyListScreen />}
         >
         </PrivateRoute>
         <PrivateRoute exact path={AppRoute.AddReview} render={() => {
@@ -67,7 +66,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
         >
         </PrivateRoute>
         <Route exact path={AppRoute.Player}>
-          <PlayerScreen films={films}/>
+          <PlayerScreen film={promoFilm || currentFilm} />
         </Route>
         <Route exact path={AppRoute.Film} render={(params) => {
           const filmId = parseInt(params.match.params.id, 10);

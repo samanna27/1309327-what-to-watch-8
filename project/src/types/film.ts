@@ -7,12 +7,12 @@ export type FilmOverview = {
 
 export type FilmReview = {
   id: number
-  rating?: number;
-  comment?: string;
   user: {
     id: number;
     name: string;
   }
+  rating: number;
+  comment: string;
   date: string;
 }
 

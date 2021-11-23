@@ -1,13 +1,19 @@
 import Logo from '../logo/logo';
-import { Film } from '../../types/film';
 import SvgLogo from '../svg-logo/svg-logo';
 import LoginLogout from '../login-logout/login-logout';
+import {connect, ConnectedProps} from 'react-redux';
+import React from 'react';
+import {State} from '../../types/state';
 
-type MyListScreenProps = {
-  films: Film[];
-}
+const mapStateToProps = ({films}: State) => ({
+  films,
+});
 
-function MyListScreen({films}: MyListScreenProps):JSX.Element {
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux;
+
+function MyListScreen({films}: ConnectedComponentProps):JSX.Element {
 
   return (
     <>
@@ -30,7 +36,7 @@ function MyListScreen({films}: MyListScreenProps):JSX.Element {
             {films.filter((film) => (film.addedToWatchList === true)).map((film) => (
               <article key={film.id} className="small-film-card catalog__films-card">
                 <div className="small-film-card__image">
-                  <img src={film.poster} alt={film.title} width="280" height="175" />
+                  <img src={film.previewImage} alt={film.title} width="280" height="175" />
                 </div>
                 <h3 className="small-film-card__title">
                   <a className="small-film-card__link" href="film-page.html">{film.title}</a>
@@ -59,4 +65,5 @@ function MyListScreen({films}: MyListScreenProps):JSX.Element {
   );
 }
 
-export default MyListScreen;
+export {MyListScreen};
+export default connector(MyListScreen);

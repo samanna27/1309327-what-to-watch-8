@@ -21,12 +21,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & FilmReviewProps ;
 
 function FilmReview({currentFilm, comments, film}: ConnectedComponentProps):JSX.Element {
-  // if (currentFilm) {
-  //   const currentFilmId = currentFilm.id.toString();
-  //   (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(currentFilmId));}
-  // if (film) {
-  //   const filmId = film.id.toString();
-  //   (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(filmId));}
 
   return (
     <div className="film-card__reviews film-card__row">
@@ -37,7 +31,7 @@ function FilmReview({currentFilm, comments, film}: ConnectedComponentProps):JSX.
               <p className="review__text">{comment.comment}</p>
 
               <footer className="review__details">
-                <cite className="review__author">{comment.user.name}</cite>
+                <cite className="review__author">{comment.user?.name}</cite>
                 <time className="review__date" dateTime={comment.date}>{dayjs(comment.date).format('MMMM DD, YYYY')}</time>
               </footer>
             </blockquote>

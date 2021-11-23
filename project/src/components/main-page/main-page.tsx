@@ -4,12 +4,11 @@ import Logo from '../logo/logo';
 import GenresList from '../genres-list/genres-list';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import ShowMoreButton from '../show-more-button/show-more-button';
+import PlayerScreen from '../player-screen/player-screen';
 import {State} from '../../types/state';
 import LoginLogout from '../login-logout/login-logout';
-import {fetchToggleFavoriteAction} from '../../store/api-actions';
-import {ThunkAppDispatch} from '../../types/action';
-import {store} from '../../index';
 import MyListButton from '../my-list-button/my-list-button';
+import {Link} from 'react-router-dom';
 
 const mapStateToProps = ({promoFilm, films, genre, renderedFilms}: State) => ({
   promoFilm,
@@ -25,10 +24,6 @@ type ConnectedComponentProps = PropsFromRedux;
 function MainPage(props: ConnectedComponentProps): JSX.Element {
   const {promoFilm, films, renderedFilms, genre}=props;
   let filmsLength = 0;
-  const handleClick = ()=>{
-    if (promoFilm !== null) {
-      (store.dispatch as ThunkAppDispatch)(fetchToggleFavoriteAction(promoFilm.id, Number(!promoFilm.addedToWatchList)));
-    }};
 
   return (
     <React.Fragment>
@@ -59,28 +54,21 @@ function MainPage(props: ConnectedComponentProps): JSX.Element {
               </p>
 
               <div className="film-card__buttons">
-                <button
-                  className="btn btn--play film-card__button"
-                  type="button"
-                  onClick={()=>{
-                    // <VideoPlayer film={film} isPlaying={isPlaying} />;
-                    //   <h3 className="small-film-card__title">
-                    //     {title}
-                    //   </h3>
-                    // </Link>
-                  }}
-                >
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
-                  </svg>
-                  <span>Play</span>
-                </button>
-                <button className="btn btn--list film-card__button" type="button" onClick={handleClick}>
-                  <MyListButton />
-                  <span>
-                    My list
-                  </span>
-                </button>
+                <Link to={`/player/${promoFilm?.id}`} className="btn film-card__button">
+                  <button
+                    className="btn btn--play film-card__button"
+                    type="button"
+                    onClick={()=>{
+                      <PlayerScreen film={promoFilm} />;
+                    }}
+                  >
+                    <svg viewBox="0 0 19 19" width="19" height="19">
+                      <use xlinkHref="#play-s"></use>
+                    </svg>
+                    <span>Play</span>
+                  </button>
+                </Link>
+                <MyListButton film={promoFilm}/>
               </div>
             </div>
           </div>

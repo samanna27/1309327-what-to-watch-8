@@ -11,6 +11,7 @@ import {Film} from '../../types/film';
 import Loader from 'react-loader-spinner';
 import SvgLogo from '../svg-logo/svg-logo';
 import LoginLogout from '../login-logout/login-logout';
+import MyListButton from '../my-list-button/my-list-button';
 
 type FilmScreenProps = {
   film: Film | null,
@@ -98,12 +99,8 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId}: ConnectedComp
                   </svg>
                   <span>Play</span>
                 </button>
-                <button className="btn btn--list film-card__button" type="button">
-                  <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
-                  </svg>
-                  <span>My list</span>
-                </button>
+                <MyListButton film={film}/>
+
                 <Link to={`/films/${id}/review`} className="btn film-card__button">Add review</Link>
               </div>
             </div>

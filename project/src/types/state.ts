@@ -9,10 +9,7 @@ export type State = {
   currentId: number,
   similarFilms: Film[] | null,
   comments: FilmReview[],
-  comment: {
-    rating: number,
-    text: string,
-  },
+  comment: FilmReview | null,
   authorizationStatus: AuthorizationStatus,
   isDataLoaded: boolean,
   renderedFilms: number,

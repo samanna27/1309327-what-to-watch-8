@@ -36,21 +36,17 @@ export const fetchCommentsAction = (filmId: string): ThunkActionResult =>
     dispatch(loadComments(data));
   };
 
-export const fetchPostCommentAction = (comment: {rating: number, text: string}, id: number): ThunkActionResult =>
+export const fetchPostCommentAction = (newComment: {rating: number, comment: string}, id: number): ThunkActionResult =>
   async (dispatch, _getState, api) => {
-    //eslint-disable-next-line
-    console.log(id, `/comments/${id}`);
-    const {data: {token}} = await api.post<{token: Token}>(`/comments/${id}`, comment);
-    saveToken(token);
-    dispatch(addComment(comment));
+    const {rating, comment} = newComment;
+    const {data} = await api.post<FilmReview>(`/comments/${id}`, {rating, comment});
+    dispatch(addComment(data, id));
   };
 
 export const fetchToggleFavoriteAction = (filmId: number, status: number): ThunkActionResult =>
   async (dispatch, _getState, api) => {
     const {data} = await api.post<Film>(`/favorite/${filmId}/${status}`);
     if(data) {
-      //eslint-disable-next-line
-      console.log(data);
       dispatch(updateFilmsData(adaptToClient(data)));}
   };
 
@@ -59,8 +55,11 @@ export const checkAuthAction = (): ThunkActionResult =>
 
     await api.get(APIRoute.Login)
       .then((data) => {
-        dispatch(requireAuthorization(AuthorizationStatus.Auth));
-        dispatch(redirectToRoute(AppRoute.Main));
+        if(data.status === 200) {
+          dispatch(requireAuthorization(AuthorizationStatus.Auth));
+        } else {
+          dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
+        }
       });
   };
 
