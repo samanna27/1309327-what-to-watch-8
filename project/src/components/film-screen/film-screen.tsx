@@ -12,6 +12,7 @@ import Loader from 'react-loader-spinner';
 import SvgLogo from '../svg-logo/svg-logo';
 import LoginLogout from '../login-logout/login-logout';
 import MyListButton from '../my-list-button/my-list-button';
+import PlayerScreen from '../player-screen/player-screen';
 
 type FilmScreenProps = {
   film: Film | null,
@@ -93,12 +94,18 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId}: ConnectedComp
               </p>
 
               <div className="film-card__buttons">
-                <button className="btn btn--play film-card__button" type="button">
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
-                  </svg>
-                  <span>Play</span>
-                </button>
+                <Link to={`/player/${film?.id}`} className="btn film-card__button">
+                  <button className="btn btn--play film-card__button" type="button"
+                    onClick={()=>{
+                      <PlayerScreen film={film} />;
+                    }}
+                  >
+                    <svg viewBox="0 0 19 19" width="19" height="19">
+                      <use xlinkHref="#play-s"></use>
+                    </svg>
+                    <span>Play</span>
+                  </button>
+                </Link>
                 <MyListButton film={film}/>
 
                 <Link to={`/films/${id}/review`} className="btn film-card__button">Add review</Link>
@@ -130,13 +137,7 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId}: ConnectedComp
         </section>
 
         <footer className="page-footer">
-          <div className="logo">
-            <a href="main.html" className="logo__link logo__link--light">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </a>
-          </div>
+          <Logo />
 
           <div className="copyright">
             <p>© 2019 What to watch Ltd.</p>

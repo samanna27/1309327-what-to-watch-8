@@ -13,7 +13,7 @@ type PlayerScreenProps = {
 function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  // let timer = '';
+  let timer = '';
 
   useEffect(() => {
     if (videoRef.current === null) {
@@ -40,38 +40,38 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
     }
   };
 
-  // const setTime = function (duration: number) {
-  //   const hours = Math.floor(duration / 60);
-  //   const minutes = Math.floor(duration - hours * 60);
-  //   const seconds = Math.floor(duration - hours*360 - minutes * 60);
-  //   let hourValue;
-  //   let minuteValue;
-  //   let secondValue;
+  const setTime = function (duration: string) {
+    const hours = Math.floor(+duration / 60);
+    const minutes = Math.floor(+duration - hours * 60);
+    const seconds = Math.floor(+duration - hours*360 - minutes * 60);
+    let hourValue;
+    let minuteValue;
+    let secondValue;
 
-  //   if (hours < 10) {
-  //     hourValue = `0 + ${hours}`;
-  //   } else {
-  //     hourValue = hours;
-  //   }
+    if (hours < 10) {
+      hourValue = `0 + ${hours}`;
+    } else {
+      hourValue = hours;
+    }
 
-  //   if (minutes < 10) {
-  //     minuteValue = `0 + ${minutes}`;
-  //   } else {
-  //     minuteValue = minutes;
-  //   }
+    if (minutes < 10) {
+      minuteValue = `0 + ${minutes}`;
+    } else {
+      minuteValue = minutes;
+    }
 
-  //   if (seconds < 10) {
-  //     secondValue = `0 + ${seconds}`;
-  //   } else {
-  //     secondValue = seconds;
-  //   }
+    if (seconds < 10) {
+      secondValue = `0 + ${seconds}`;
+    } else {
+      secondValue = seconds;
+    }
 
-  //   const mediaTime = `${hourValue} + ':' + ${minuteValue} + ':' + ${secondValue}`;
-  //   timer = mediaTime;
+    const mediaTime = `${hourValue} + ':' + ${minuteValue} + ':' + ${secondValue}`;
+    return timer = mediaTime;
 
   // let barLength = timerWrapper.clientWidth * (media.currentTime/media.duration);
   // timerBar.style.width = barLength + 'px';
-  // };
+  };
 
   // videoRef.current?.addEventListener('timeupdate', setTime);
 
@@ -89,7 +89,7 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
             muted
             preload="auto"
             controls
-            // {(film.duration !== null) ? ontimeupdate={() => setTime(film?.duration)} : '';}
+            onTimeUpdate={() => setTime(film?.duration ? film?.duration : '0')}
           >
           </video> :
           <video
@@ -112,7 +112,7 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
               <progress className="player__progress" value="30" max="100"></progress>
               <div className="player__toggler" style={{left: '30%'}}>Toggler</div>
             </div>
-            <div className="player__time-value">{film?.duration ? film?.duration : ''}</div>
+            <div className="player__time-value">{film?.duration ? timer : ''}</div>
           </div>
 
           <div className="player__controls-row">
