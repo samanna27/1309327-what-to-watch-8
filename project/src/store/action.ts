@@ -44,6 +44,13 @@ export const loadSimilarFilms = (similarFilms: Film[] | null, currentId: number)
   },
 } as const);
 
+export const loadMyListFilms = (myListFilms: Film[] | null) => ({
+  type: ActionType.LoadMyListFilms,
+  payload: {
+    myListFilms,
+  },
+} as const);
+
 export const loadComments = (comments: FilmReview[]) => ({
   type: ActionType.LoadComments,
   payload: {

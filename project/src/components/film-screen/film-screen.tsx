@@ -13,6 +13,7 @@ import SvgLogo from '../svg-logo/svg-logo';
 import LoginLogout from '../login-logout/login-logout';
 import MyListButton from '../my-list-button/my-list-button';
 import PlayerScreen from '../player-screen/player-screen';
+import { AuthorizationStatus } from '../../const';
 
 type FilmScreenProps = {
   film: Film | null,
@@ -22,10 +23,11 @@ type FilmScreenRouteParams = {
   id: string
 }
 
-const mapStateToProps = ({currentFilm, currentId, similarFilms}: State) => ({
+const mapStateToProps = ({currentFilm, currentId, similarFilms, authorizationStatus}: State) => ({
   similarFilms,
   currentFilm,
   currentId,
+  authorizationStatus,
 });
 
 const connector = connect(mapStateToProps);
@@ -33,7 +35,7 @@ const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & FilmScreenProps;
 
-function FilmScreen({ film, similarFilms, currentFilm, currentId}: ConnectedComponentProps):JSX.Element {
+function FilmScreen({ film, similarFilms, currentFilm, currentId, authorizationStatus}: ConnectedComponentProps):JSX.Element {
   const exit = '';
   const params = useParams<FilmScreenRouteParams>();
   const filmId = params.id;
@@ -108,7 +110,10 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId}: ConnectedComp
                 </Link>
                 <MyListButton film={film}/>
 
-                <Link to={`/films/${id}/review`} className="btn film-card__button">Add review</Link>
+                { authorizationStatus === AuthorizationStatus.Auth ?
+                  <Link to={`/films/${id}/review`} className="btn film-card__button">Add review</Link> :
+                  ''}
+
               </div>
             </div>
           </div>

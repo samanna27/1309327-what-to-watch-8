@@ -59,7 +59,6 @@ function Tabs({film, authorizationStatus}: ConnectedComponentProps):JSX.Element 
     <div className="film-card__desc">
       <nav className="film-nav film-card__nav">
         {film === null ?
-        // document.querySelector('.film-nav__list')
           <ul className="film-nav__list">
             <li className="film-nav__item film-nav__item--active">
               <a href="#" className="film-nav__link">Overview</a>
@@ -109,7 +108,7 @@ function Tabs({film, authorizationStatus}: ConnectedComponentProps):JSX.Element 
 
       {isVisibleFilmOverview && <FilmOverview film={film}  />}
       {isVisibleFilmDetails && <FilmDetails film={film} />}
-      {isVisibleFilmReviews && <FilmReview film={film}/>}
+      {isVisibleFilmReviews && <FilmReview />}
 
     </div>
   );

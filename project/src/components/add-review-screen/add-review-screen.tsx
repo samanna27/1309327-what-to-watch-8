@@ -2,32 +2,56 @@ import Logo from '../logo/logo';
 import {useHistory} from 'react-router-dom';
 import {ChangeEvent, FormEvent, useRef, useState} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
-import {fetchPostCommentAction} from '../../store/api-actions';
+import {fetchPostCommentAction, fetchFilmDataAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
 import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH} from '../../const';
 import {Film} from '../../types/film';
 import ReviewRatingStar from './review-rating-star';
 import LoginLogout from '../login-logout/login-logout';
 import SvgLogo from '../svg-logo/svg-logo';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import {store} from '../../index';
+import {State} from '../../types/state';
+import Loader from 'react-loader-spinner';
 
 type AddReviewScreenProps = {
-  film: Film,
+  film: Film | null,
 }
 
-const connector = connect();
+type AddReviewScreenRouteParams = {
+  id: string
+}
+
+const mapStateToProps = ({currentFilm}: State) => ({
+  currentFilm,
+});
+
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & AddReviewScreenProps;
 
 function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
-  const {film} = props;
-  const { id, bigPoster, poster, title } = film;
-
+  const {film, currentFilm} = props;
+  const params = useParams<AddReviewScreenRouteParams>();
+  const filmId = params.id;
   const textRef = useRef<HTMLTextAreaElement>(null);
-
   const history = useHistory();
+  const [rating, setRating] = useState<number>(0);
+  const [newComment, setNewComment] = useState<string>('');
+
+  if (film === null && currentFilm === null) {
+    (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction(filmId));
+    return (
+      <Loader type="Puff"
+        color="#00BFFF"
+        height={500}
+        width={500}
+      />
+    );
+  }
+
+  const { id, bigPoster, poster, title } = film || currentFilm || {};
 
   let starRatingCount = 10;
   const stars =  new Array(10).fill('').map((index) => {
@@ -37,19 +61,10 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
     return index;
   });
 
-  const [rating, setRating] = useState<number>(0);
   const handleInputAreaChange = (evt: ChangeEvent<HTMLInputElement>, ratingToSet: number) => {
     setRating(ratingToSet);
-    if(ratingToSet === 0) {
-      evt.target.setCustomValidity('Обязательное поле');
-    } else {
-      evt.target.setCustomValidity('');
-    }
-
-    evt.target.reportValidity();
   };
 
-  const [newComment, setNewComment] = useState<string>('');
   const handleTextAreaChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(evt.target.value);
     if (newComment !== null) {
@@ -81,14 +96,12 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
     (store.dispatch as ThunkAppDispatch)(fetchPostCommentAction(
       {rating: rating,
         comment: newComment},
-      id));
+      +filmId));
 
     history.push(`/films/${id}`);
   };
 
   const isFormValid = (rating !== 0 && newComment.length>50 && newComment.length<400);
-  //eslint-disable-next-line
-  console.log(isFormValid);
 
   return (
     <>
@@ -151,7 +164,7 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
               <div className="add-review__submit">
                 <button
                   className="add-review__btn"
-                  { ...isFormValid===true ? '' : 'disabled'}
+                  disabled = {!isFormValid}
                   type="submit"
                 >
                   Post

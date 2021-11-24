@@ -11,9 +11,10 @@ type PlayerScreenProps = {
 }
 
 function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
+  const duration = film ? film.duration : 0;
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  let timer = '';
+  const [remainingTime, setRemainingTime] = useState<number>(0);
 
   useEffect(() => {
     if (videoRef.current === null) {
@@ -40,40 +41,29 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
     }
   };
 
-  const setTime = function (duration: string) {
-    const hours = Math.floor(+duration / 60);
-    const minutes = Math.floor(+duration - hours * 60);
-    const seconds = Math.floor(+duration - hours*360 - minutes * 60);
-    let hourValue;
-    let minuteValue;
-    let secondValue;
-
-    if (hours < 10) {
-      hourValue = `0 + ${hours}`;
-    } else {
-      hourValue = hours;
-    }
-
-    if (minutes < 10) {
-      minuteValue = `0 + ${minutes}`;
-    } else {
-      minuteValue = minutes;
-    }
-
-    if (seconds < 10) {
-      secondValue = `0 + ${seconds}`;
-    } else {
-      secondValue = seconds;
-    }
-
-    const mediaTime = `${hourValue} + ':' + ${minuteValue} + ':' + ${secondValue}`;
-    return timer = mediaTime;
-
-  // let barLength = timerWrapper.clientWidth * (media.currentTime/media.duration);
-  // timerBar.style.width = barLength + 'px';
+  const handleTimeUpdate = () => {
+    videoRef.current ?
+      setRemainingTime(+(duration) - videoRef.current?.currentTime) :
+      setRemainingTime(0);
   };
 
-  // videoRef.current?.addEventListener('timeupdate', setTime);
+  const formattingTime = function (timeInSeconds: number) {
+    const hours = Math.floor(timeInSeconds / 360);
+    const minutes = Math.floor(timeInSeconds / 60 - hours * 60);
+    const seconds = Math.floor(timeInSeconds - hours*360 - minutes * 60);
+    const hourValue=`${hours<10 ? '0' : ''}${hours}`;
+    const minuteValue=`${minutes<10 ? '0' : ''}${minutes}`;
+    const secondValue=`${seconds<10 ? '0' : ''}${seconds}`;
+
+    const mediaTime = `${hourValue}:${minuteValue}:${secondValue}`;
+    return mediaTime;
+  };
+
+  const formattingTimeBarPercentage = function(timeInSeconds: number) {
+    const percentage = Math.floor((+duration - timeInSeconds) *100 / +duration);
+    return percentage;
+  };
+
 
   return (
     <>
@@ -89,7 +79,9 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
             muted
             preload="auto"
             controls
-            onTimeUpdate={() => setTime(film?.duration ? film?.duration : '0')}
+            onTimeUpdate={(event)=> {
+              handleTimeUpdate();
+            }}
           >
           </video> :
           <video
@@ -109,10 +101,10 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
         <div className="player__controls">
           <div className="player__controls-row">
             <div className="player__time">
-              <progress className="player__progress" value="30" max="100"></progress>
-              <div className="player__toggler" style={{left: '30%'}}>Toggler</div>
+              <progress className="player__progress" value={formattingTimeBarPercentage(remainingTime)} max="100"></progress>
+              <div className="player__toggler" style={{left: `${formattingTimeBarPercentage(remainingTime)}%`}}>Toggler</div>
             </div>
-            <div className="player__time-value">{film?.duration ? timer : ''}</div>
+            <div className="player__time-value">{formattingTime(remainingTime)}</div>
           </div>
 
           <div className="player__controls-row">
@@ -126,7 +118,9 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
                 <span>Pause</span>
               </button> :
               <button type="button" className="player__play"
-                onClick={()=>{setIsPlaying(!isPlaying);}}
+                onClick={()=>{
+                  setIsPlaying(!isPlaying);
+                }}
               >
                 <svg viewBox="0 0 19 19" width="19" height="19">
                   <use xlinkHref="#play-s"></use>

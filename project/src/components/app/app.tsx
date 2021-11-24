@@ -49,10 +49,8 @@ function App(props: ConnectedComponentProps): JSX.Element {
         <Route exact path={AppRoute.SignIn}>
           <SignInScreen />
         </Route>
-        <PrivateRoute
-          exact
-          path={AppRoute.MyList}
-          render={()=><MyListScreen />}
+        <PrivateRoute exact path={AppRoute.MyList} render={()=>
+          <MyListScreen films={films}/>}
         >
         </PrivateRoute>
         <PrivateRoute exact path={AppRoute.AddReview} render={() => {
@@ -60,7 +58,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
           if( commentedFilm) {
             return <AddReviewScreen film={commentedFilm}/>;
           } else {
-            return <AddReviewScreen film={films[1]}/>;
+            return <AddReviewScreen film={null}/>;
           }
         }}
         >

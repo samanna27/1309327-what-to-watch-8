@@ -1,14 +1,6 @@
 import {connect, ConnectedProps} from 'react-redux';
 import {State} from '../../types/state';
-// import {fetchCommentsAction} from '../../store/api-actions';
-// import {ThunkAppDispatch} from '../../types/action';
-// import {store} from '../../index';
-import { Film } from '../../types/film';
 import dayjs from 'dayjs';
-
-type FilmReviewProps = {
-  film: Film | null,
-}
 
 const mapStateToProps = ({currentFilm, comments}: State) => ({
   currentFilm,
@@ -18,9 +10,9 @@ const mapStateToProps = ({currentFilm, comments}: State) => ({
 const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & FilmReviewProps ;
+type ConnectedComponentProps = PropsFromRedux;
 
-function FilmReview({currentFilm, comments, film}: ConnectedComponentProps):JSX.Element {
+function FilmReview({comments}: ConnectedComponentProps):JSX.Element {
 
   return (
     <div className="film-card__reviews film-card__row">

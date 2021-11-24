@@ -1,5 +1,5 @@
 import {ThunkActionResult} from '../types/action';
-import {loadFilms, loadFilmData, loadPromoFilmData, loadSimilarFilms, loadComments, addComment, redirectToRoute, requireAuthorization, requireLogout, changeUserEmail, updateFilmsData} from './action';
+import {loadFilms, loadFilmData, loadPromoFilmData, loadSimilarFilms, loadMyListFilms, loadComments, addComment, redirectToRoute, requireAuthorization, requireLogout, changeUserEmail, updateFilmsData} from './action';
 import {saveToken, dropToken, Token} from '../services/token';
 import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
 import {Film, FilmReview} from '../types/film';
@@ -26,8 +26,20 @@ export const fetchPromoFilmAction = (): ThunkActionResult =>
 
 export const fetchSimilarFilmsAction = (filmId: string, currentId: number): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    const {data} = await api.get<Film[]>(`/films/${filmId}/similar`);
-    dispatch(loadSimilarFilms(data.map(adaptToClient), currentId));
+    await api.get<Film[]>(`/films/${filmId}/similar`)
+      .then((data) => {
+        if(data.status === 200) {
+          dispatch(loadSimilarFilms(data.data.map(adaptToClient), currentId));
+        } else {
+          dispatch(redirectToRoute(AppRoute.SignIn));
+        }
+      });
+  };
+
+export const fetchMyListFilmsAction = (): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    const {data} = await api.get<Film[]>('/favorite');
+    dispatch(loadMyListFilms(data.map(adaptToClient)));
   };
 
 export const fetchCommentsAction = (filmId: string): ThunkActionResult =>
@@ -39,15 +51,27 @@ export const fetchCommentsAction = (filmId: string): ThunkActionResult =>
 export const fetchPostCommentAction = (newComment: {rating: number, comment: string}, id: number): ThunkActionResult =>
   async (dispatch, _getState, api) => {
     const {rating, comment} = newComment;
-    const {data} = await api.post<FilmReview>(`/comments/${id}`, {rating, comment});
-    dispatch(addComment(data, id));
+    await api.post<FilmReview>(`/comments/${id}`, {rating, comment})
+      .then((data) => {
+        if(data.status === 200) {
+          dispatch(addComment(data.data, id));
+        }
+      })
+      .catch((Error) => {
+        throw new Error('Something went wrong. Please try again.');
+      });
   };
 
 export const fetchToggleFavoriteAction = (filmId: number, status: number): ThunkActionResult =>
   async (dispatch, _getState, api) => {
-    const {data} = await api.post<Film>(`/favorite/${filmId}/${status}`);
-    if(data) {
-      dispatch(updateFilmsData(adaptToClient(data)));}
+    await api.post<Film>(`/favorite/${filmId}/${status}`)
+      .then((data) => {
+        if(data.status === 200) {
+          dispatch(updateFilmsData(adaptToClient(data.data)));
+        } else {
+          dispatch(redirectToRoute(AppRoute.SignIn));
+        }
+      });
   };
 
 export const checkAuthAction = (): ThunkActionResult =>

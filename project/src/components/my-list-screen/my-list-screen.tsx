@@ -5,16 +5,31 @@ import {connect, ConnectedProps} from 'react-redux';
 import React from 'react';
 import {State} from '../../types/state';
 import SmallFilmCard from '../small-film-card/small-film-card';
+import {fetchMyListFilmsAction} from '../../store/api-actions';
+import {ThunkAppDispatch} from '../../types/action';
+import {store} from '../../index';
+import {Film} from '../../types/film';
 
-const mapStateToProps = ({films}: State) => ({
-  films,
+type MyListScreenProps = {
+  films: Film[] | null,
+};
+
+const mapStateToProps = ({myListFilms}: State) => ({
+  myListFilms,
 });
 
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux;
+type ConnectedComponentProps = PropsFromRedux & MyListScreenProps;
 
-function MyListScreen({films}: ConnectedComponentProps):JSX.Element {
+function MyListScreen({ films, myListFilms}: ConnectedComponentProps):JSX.Element {
+  const currentMyListFilms = films?.filter((film) => (film.addedToWatchList === true));
+
+  if (myListFilms === null && currentMyListFilms !== null) {
+    (store.dispatch as ThunkAppDispatch)(fetchMyListFilmsAction());
+  } else if(JSON.stringify(myListFilms) !== JSON.stringify(currentMyListFilms)) {
+    (store.dispatch as ThunkAppDispatch)(fetchMyListFilmsAction());
+  }
 
   return (
     <>
@@ -34,7 +49,8 @@ function MyListScreen({films}: ConnectedComponentProps):JSX.Element {
 
           <div className="catalog__films-list">
 
-            {films.filter((film) => (film.addedToWatchList === true)).map((film) => (
+            {/* {films.filter((film) => (film.addedToWatchList === true)).map((film) => ( */}
+            {myListFilms?.map((film) => (
               <SmallFilmCard key={film.id} film={film} />
             ))}
 

@@ -14,6 +14,7 @@ import {
   loadFilmData,
   loadPromoFilmData,
   loadSimilarFilms,
+  loadMyListFilms,
   loadComments,
   addComment,
   requireAuthorization,
@@ -31,6 +32,7 @@ export enum ActionType {
   LoadFilmData = 'data/loadFilmData',
   LoadPromoFilmData = 'data/loadPromoFilmData',
   LoadSimilarFilms = 'data/loadSimilarFilms',
+  LoadMyListFilms = 'data/loadMyListFilms',
   LoadComments = 'data/loadComments',
   AddComment = 'data/addComment',
   RequireAuthorization = 'user/requireAuthorization',
@@ -48,6 +50,7 @@ export type Actions =
  | ReturnType<typeof loadFilmData>
  | ReturnType<typeof loadPromoFilmData>
  | ReturnType<typeof loadSimilarFilms>
+ | ReturnType<typeof loadMyListFilms>
  | ReturnType<typeof loadComments>
  | ReturnType<typeof addComment>
  | ReturnType<typeof requireAuthorization>

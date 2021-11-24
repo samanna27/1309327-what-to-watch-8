@@ -11,6 +11,7 @@ const movies = [] as Film[];
 const initialState = {
   genre: 'All genres',
   films: [],
+  myListFilms: null,
   currentFilm: null,
   promoFilm: null,
   currentId: -1,
@@ -50,6 +51,10 @@ const reducer = (state: State = initialState, action: Actions): State => {
       const similarFilms = action.payload.similarFilms;
       const currentId = action.payload.currentId;
       return {...state, similarFilms, currentId};
+    }
+    case ActionType.LoadMyListFilms: {
+      const {myListFilms} = action.payload;
+      return {...state, myListFilms};
     }
     case ActionType.LoadComments: {
       const {comments} = action.payload;

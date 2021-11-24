@@ -18,12 +18,12 @@ function SmallFilmCard({film}: SmallFilmCardProps):JSX.Element {
       onMouseLeave={() => {
         setIsPlaying(false);}}
     >
-      <Link to={`/films/${id}`} >
-        <VideoPlayer film={film} isPlaying={isPlaying} />
-        <h3 className="small-film-card__title">
+      <VideoPlayer film={film} isPlaying={isPlaying} />
+      <h3 className="small-film-card__title">
+        <Link to={`/films/${id}`} className='small-film-card__link' >
           {title}
-        </h3>
-      </Link>
+        </Link>
+      </h3>
     </article>
   );
 }
