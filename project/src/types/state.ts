@@ -1,4 +1,5 @@
 import { Film, FilmReview } from './film';
+import { AuthInfo } from './auth-data';
 import {AuthorizationStatus} from '../const';
 
 export type State = {
@@ -14,5 +15,5 @@ export type State = {
   authorizationStatus: AuthorizationStatus,
   isDataLoaded: boolean,
   renderedFilms: number,
-  userEmail: string,
+  authInfo: AuthInfo | null,
 };

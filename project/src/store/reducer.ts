@@ -21,7 +21,7 @@ const initialState = {
   authorizationStatus: AuthorizationStatus.Unknown,
   isDataLoaded: false,
   renderedFilms: 8,
-  userEmail: '',
+  authInfo: null,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -75,10 +75,6 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {...state, authorizationStatus: AuthorizationStatus.NoAuth};
     case ActionType.ResetFilmList:
       return {...initialState};
-    case ActionType.ChangeUserEmail: {
-      const userEmail = action.payload;
-      return {...state, userEmail};
-    }
     case ActionType.UpdateFilmsData: {
       const updatedFilm = action.payload;
       const films = state.films.slice();
@@ -95,6 +91,10 @@ const reducer = (state: State = initialState, action: Actions): State => {
         }
       }
       return {...state, films, promoFilm};
+    }
+    case ActionType.UpdateUserData: {
+      const authInfo = action.payload;
+      return {...state, authInfo};
     }
     default:
       return state;

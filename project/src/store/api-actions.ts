@@ -1,10 +1,13 @@
 import {ThunkActionResult} from '../types/action';
-import {loadFilms, loadFilmData, loadPromoFilmData, loadSimilarFilms, loadMyListFilms, loadComments, addComment, redirectToRoute, requireAuthorization, requireLogout, changeUserEmail, updateFilmsData} from './action';
+import {loadFilms, loadFilmData, loadPromoFilmData, loadSimilarFilms, loadMyListFilms, loadComments, addComment, redirectToRoute, requireAuthorization, requireLogout, updateFilmsData, updateUserData} from './action';
 import {saveToken, dropToken, Token} from '../services/token';
 import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
 import {Film, FilmReview} from '../types/film';
-import {AuthData} from '../types/auth-data';
-import {adaptToClient} from '../components/adaptor/adaptor';
+import {AuthData, AuthInfo} from '../types/auth-data';
+import {adaptToClient, adaptAuthInfoToClient} from '../components/adaptor/adaptor';
+import {toast} from 'react-toastify';
+
+const COMMENT_POST_FAIL_MESSAGE = 'Ваш комментарий не был отправлен. Попробуйте еще раз.';
 
 export const fetchFilmsAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
@@ -50,16 +53,17 @@ export const fetchCommentsAction = (filmId: string): ThunkActionResult =>
 
 export const fetchPostCommentAction = (newComment: {rating: number, comment: string}, id: number): ThunkActionResult =>
   async (dispatch, _getState, api) => {
-    const {rating, comment} = newComment;
-    await api.post<FilmReview>(`/comments/${id}`, {rating, comment})
-      .then((data) => {
-        if(data.status === 200) {
-          dispatch(addComment(data.data, id));
-        }
-      })
-      .catch((Error) => {
-        throw new Error('Something went wrong. Please try again.');
-      });
+    try {
+      const {rating, comment} = newComment;
+      await api.post<FilmReview>(`/comments/${id}`, {rating, comment})
+        .then((data) => {
+          if(data.status === 200) {
+            dispatch(addComment(data.data, id));
+          }
+        });
+    } catch {
+      toast.info(COMMENT_POST_FAIL_MESSAGE);
+    }
   };
 
 export const fetchToggleFavoriteAction = (filmId: number, status: number): ThunkActionResult =>
@@ -77,9 +81,10 @@ export const fetchToggleFavoriteAction = (filmId: number, status: number): Thunk
 export const checkAuthAction = (): ThunkActionResult =>
   async (dispatch, _getState, api) => {
 
-    await api.get(APIRoute.Login)
+    await api.get<AuthInfo>(APIRoute.Login)
       .then((data) => {
         if(data.status === 200) {
+          dispatch(updateUserData(adaptAuthInfoToClient(data.data)));
           dispatch(requireAuthorization(AuthorizationStatus.Auth));
         } else {
           dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
@@ -100,6 +105,5 @@ export const logoutAction = (): ThunkActionResult =>
     api.delete(APIRoute.Logout);
     dropToken();
     dispatch(requireLogout());
-    dispatch(changeUserEmail(''));
     dispatch(redirectToRoute(AppRoute.Main));
   };

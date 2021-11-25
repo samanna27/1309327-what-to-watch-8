@@ -5,9 +5,9 @@ import {ThunkAppDispatch} from '../../types/action';
 import {AppRoute, AuthorizationStatus} from '../../const';
 import {State} from '../../types/state';
 
-const mapStateToProps = ({authorizationStatus, userEmail}: State) => ({
+const mapStateToProps = ({authorizationStatus, authInfo}: State) => ({
   authorizationStatus,
-  userEmail,
+  authInfo,
 });
 
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
@@ -22,7 +22,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
 function LoginLogout(props: ConnectedComponentProps):JSX.Element {
-  const {authorizationStatus, userEmail, requireLogout} = props;
+  const {authorizationStatus, requireLogout, authInfo} = props;
 
   return (
     authorizationStatus === AuthorizationStatus.Auth
@@ -31,10 +31,10 @@ function LoginLogout(props: ConnectedComponentProps):JSX.Element {
         <li className="user-block__item">
           <div className="user-block__avatar">
             <Link to={AppRoute.MyList} >
-              <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
+              <img src={authInfo?.avatarUrl ? authInfo.avatarUrl : authInfo?.email} alt="User avatar" width="63" height="63" />
             </Link>
           </div>
-          <p>{userEmail}</p>
+          {/* <p>{userEmail}</p> */}
         </li>
         <li className="user-block__item">
 

@@ -2,27 +2,14 @@ import Logo from '../logo/logo';
 import {useRef, FormEvent} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {loginAction} from '../../store/api-actions';
-import {changeUserEmail} from '../../store/action';
-import {Actions} from '../../types/action';
 import {ThunkAppDispatch} from '../../types/action';
-import {State} from '../../types/state';
-import {bindActionCreators, Dispatch} from 'redux';
 import {store} from '../../index';
 
-const mapStateToProps = ({userEmail}: State) => ({
-  userEmail,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onLoginSubmit: changeUserEmail,
-}, dispatch);
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect();
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function SignInScreen(props: PropsFromRedux):JSX.Element {
-  const {onLoginSubmit} = props;
 
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -35,7 +22,6 @@ function SignInScreen(props: PropsFromRedux):JSX.Element {
         login: loginRef.current.value,
         password: passwordRef.current.value,
       }));
-      onLoginSubmit(loginRef.current.value);
     }
   };
 

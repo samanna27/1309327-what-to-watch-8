@@ -1,5 +1,6 @@
 import {ActionType} from '../types/action';
 import {Film, Genre, FilmReview} from '../types/film';
+import {AuthInfo} from '../types/auth-data';
 import {AppRoute, AuthorizationStatus} from '../const';
 
 export const changeGenre = (genre: Genre) => ({
@@ -80,12 +81,12 @@ export const redirectToRoute = (url: AppRoute) => ({
   payload: url,
 } as const);
 
-export const changeUserEmail = (userEmail: string) => ({
-  type: ActionType.ChangeUserEmail,
-  payload: userEmail,
-} as const);
-
 export const updateFilmsData = (film: Film) => ({
   type: ActionType.UpdateFilmsData,
   payload: film,
+} as const);
+
+export const updateUserData = (authInfo: AuthInfo) => ({
+  type: ActionType.UpdateUserData,
+  payload: authInfo,
 } as const);
