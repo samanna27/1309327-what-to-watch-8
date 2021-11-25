@@ -19,17 +19,11 @@ const api = createAPI(
   () => store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth)),
 );
 
-export const store = createStore(
-  reducer,
-  composeWithDevTools(
-    applyMiddleware(thunk.withExtraArgument(api)),
-    applyMiddleware(redirect),
-  ),
-);
-
-(store.dispatch as ThunkAppDispatch)(checkAuthAction());
-(store.dispatch as ThunkAppDispatch)(fetchFilmsAction());
-(store.dispatch as ThunkAppDispatch)(fetchPromoFilmAction());
+const PromoFilmData = {
+  PROMO_FILM_TITLE: 'The Grand Budapest Hotel',
+  PROMO_FILM_GENRE: 'Drama',
+  PROMO_FILM_DATE: 2014,
+};
 
 ReactDOM.render(
   <React.StrictMode>

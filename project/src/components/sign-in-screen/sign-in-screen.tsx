@@ -65,11 +65,7 @@ function SignInScreen(props: PropsFromRedux):JSX.Element {
         </header>
 
         <div className="sign-in user-page__content">
-          <form
-            action=""
-            className="sign-in__form"
-            onSubmit={handleSubmit}
-          >
+          <form action="#" className="sign-in__form">
             <div className="sign-in__fields">
               <div className="sign-in__field">
                 <input
@@ -95,12 +91,7 @@ function SignInScreen(props: PropsFromRedux):JSX.Element {
               </div>
             </div>
             <div className="sign-in__submit">
-              <button
-                className="sign-in__btn"
-                type="submit"
-              >
-                Sign in
-              </button>
+              <button className="sign-in__btn" type="submit">Sign in</button>
             </div>
           </form>
         </div>

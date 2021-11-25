@@ -1,11 +1,28 @@
-function SmallFilmCard():JSX.Element {
+import {Film} from '../../types/film';
+import {Link} from 'react-router-dom';
+import VideoPlayer from '../video-player/video-player';
+import {useState} from 'react';
+
+type SmallFilmCardProps = {
+  film: Film;
+}
+
+function SmallFilmCard({film}: SmallFilmCardProps):JSX.Element {
+  const { id, title } = film;
+  const [isPlaying, setIsPlaying] = useState(false);
+
   return (
-    <article className="small-film-card catalog__films-card">
-      <div className="small-film-card__image">
-        <img src="img/fantastic-beasts-the-crimes-of-grindelwald.jpg" alt="Fantastic Beasts: The Crimes of Grindelwald" width="280" height="175" />
-      </div>
+    <article className="small-film-card catalog__films-card"
+      onMouseOver={() => {
+        setIsPlaying(true);}}
+      onMouseLeave={() => {
+        setIsPlaying(false);}}
+    >
+      <VideoPlayer film={film} isPlaying={isPlaying} />
       <h3 className="small-film-card__title">
-        <a className="small-film-card__link" href="film-page.html">Fantastic Beasts: The Crimes of Grindelwald</a>
+        <Link to={`/films/${id}`} className='small-film-card__link' >
+          {title}
+        </Link>
       </h3>
     </article>
   );
