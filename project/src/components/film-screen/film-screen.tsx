@@ -1,55 +1,82 @@
+import {Link, useParams} from 'react-router-dom';
 import Logo from '../logo/logo';
-import { Film } from '../../types/film';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import Tabs from '../tabs/tabs';
+import {connect, ConnectedProps} from 'react-redux';
+import {State} from '../../types/state';
+import {fetchFilmDataAction, fetchSimilarFilmsAction, fetchCommentsAction} from '../../store/api-actions';
+import {ThunkAppDispatch} from '../../types/action';
+import {store} from '../../index';
+import {Film} from '../../types/film';
+import Loader from 'react-loader-spinner';
+import SvgLogo from '../svg-logo/svg-logo';
+import LoginLogout from '../login-logout/login-logout';
+import MyListButton from '../my-list-button/my-list-button';
+import PlayerScreen from '../player-screen/player-screen';
+import { AuthorizationStatus } from '../../const';
 
 type FilmScreenProps = {
-  films: Film[];
+  film: Film | null,
 }
 
-function FilmScreen({films}: FilmScreenProps):JSX.Element {
-  const firstFilm = films[0];
-  const { id, poster, title, bigPoster, genre, releaseDate } = firstFilm;
-  // const { description } = overview;
+type FilmScreenRouteParams = {
+  id: string
+}
+
+const mapStateToProps = ({currentFilm, currentId, similarFilms, authorizationStatus}: State) => ({
+  similarFilms,
+  currentFilm,
+  currentId,
+  authorizationStatus,
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & FilmScreenProps;
+
+function FilmScreen({ film, similarFilms, currentFilm, currentId, authorizationStatus}: ConnectedComponentProps):JSX.Element {
+  const exit = '';
+  const params = useParams<FilmScreenRouteParams>();
+  const filmId = params.id;
+  if (film === null && currentFilm === null) {
+    (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction(filmId));
+    (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction(filmId, currentId));
+    (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(filmId));
+    return (
+      <Loader type="Puff"
+        color="#00BFFF"
+        height={500}
+        width={500}
+      />
+    );
+  }
+  const { id, poster, title, bigPoster, genre, releaseDate } = film || currentFilm || {};
+
+  if ( similarFilms && id !== currentId) {
+    if (id === undefined) {
+      return <div>No data</div>;
+    }
+    currentId = +id;
+    (store.dispatch as ThunkAppDispatch)(fetchSimilarFilmsAction(filmId, currentId));
+    (store.dispatch as ThunkAppDispatch)(fetchCommentsAction(filmId));
+    return (
+      <Loader type="Puff"
+        color="#00BFFF"
+        height={500}
+        width={500}
+      />
+    );
+  }
 
   return (
     <>
-      <div className="visually-hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-          <symbol id="add" viewBox="0 0 19 20">
-            <title>+</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <polygon id="+" fill="#EEE5B5" points="10.777832 11.2880859 10.777832 19.5527344 8.41650391 19.5527344 8.41650391 11.2880859 0.627929688 11.2880859 0.627929688 8.92675781 8.41650391 8.92675781 8.41650391 0.662109375 10.777832 0.662109375 10.777832 8.92675781 18.5664062 8.92675781 18.5664062 11.2880859"/>
-            </g>
-          </symbol>
-          <symbol id="full-screen" viewBox="0 0 27 27">
-            <path fillRule="evenodd" clipRule="evenodd" d="M23.8571 0H16V3.14286H23.8571V11H27V3.14286V0H23.8571Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M27 23.8571V16H23.8571V23.8571H16V27H23.8571H27L27 23.8571Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M0 3.14286L0 11H3.14286L3.14286 3.14286L11 3.14286V0H3.14286H0L0 3.14286Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M3.14286 27H11V23.8571H3.14286L3.14286 16H0L0 23.8571V27H3.14286Z" fill="#FFF9D9" fillOpacity="0.7"/>
-          </symbol>
-          <symbol id="in-list" viewBox="0 0 18 14">
-            <path fillRule="evenodd" clipRule="evenodd" d="M2.40513 5.35353L6.1818 8.90902L15.5807 0L18 2.80485L6.18935 14L0 8.17346L2.40513 5.35353Z" fill="#EEE5B5"/>
-          </symbol>
-          <symbol id="pause" viewBox="0 0 14 21">
-            <symbol id="play-s" viewBox="0 0 19 19">
-              <path fillRule="evenodd" clipRule="evenodd" d="M0 0L19 9.5L0 19V0Z" fill="#EEE5B5" />
-            </symbol>
-            <title>Artboard</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Artboard" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <polygon id="Line" fill="#EEE5B5" fillRule="nonzero" points="0 -1.11910481e-13 4 -1.11910481e-13 4 21 0 21"/>
-              <polygon id="Line" fill="#EEE5B5" fillRule="nonzero" points="10 -1.11910481e-13 14 -1.11910481e-13 14 21 10 21"/>
-            </g>
-          </symbol>
-        </svg>
-      </div>
+      <SvgLogo />
 
       <section className="film-card film-card--full" key={id}>
         <div className="film-card__hero">
           <div className="film-card__bg">
-            <img src={bigPoster} alt="The Grand Budapest Hotel" />
+            <img src={bigPoster} alt={title} />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -57,16 +84,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
           <header className="page-header film-card__head">
             <Logo />
 
-            <ul className="user-block">
-              <li className="user-block__item">
-                <div className="user-block__avatar">
-                  <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-                </div>
-              </li>
-              <li className="user-block__item">
-                <button className="user-block__link">Sign out</button>
-              </li>
-            </ul>
+            <LoginLogout />
           </header>
 
           <div className="film-card__wrap">
@@ -78,19 +96,24 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
               </p>
 
               <div className="film-card__buttons">
-                <button className="btn btn--play film-card__button" type="button">
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
-                  </svg>
-                  <span>Play</span>
-                </button>
-                <button className="btn btn--list film-card__button" type="button">
-                  <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
-                  </svg>
-                  <span>My list</span>
-                </button>
-                <a href="add-review.html" className="btn film-card__button">Add review</a>
+                <Link to={`/player/${film?.id}`} className="btn film-card__button">
+                  <button className="btn btn--play film-card__button" type="button"
+                    onClick={()=>{
+                      <PlayerScreen film={film} />;
+                    }}
+                  >
+                    <svg viewBox="0 0 19 19" width="19" height="19">
+                      <use xlinkHref="#play-s"></use>
+                    </svg>
+                    <span>Play</span>
+                  </button>
+                </Link>
+                <MyListButton film={film}/>
+
+                { authorizationStatus === AuthorizationStatus.Auth ?
+                  <Link to={`/films/${id}/review`} className="btn film-card__button">Add review</Link> :
+                  ''}
+
               </div>
             </div>
           </div>
@@ -102,7 +125,7 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
               <img src={poster} alt="The Grand Budapest Hotel poster" width="218" height="327" />
             </div>
 
-            <Tabs film={firstFilm} />
+            <Tabs film={film} />
           </div>
         </div>
       </section>
@@ -112,18 +135,14 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
           <h2 className="catalog__title">More like this</h2>
 
           <div className="catalog__films-list">
-            {films.slice().filter((film) => film.genre === firstFilm.genre).slice(0,4).map((film) => (<SmallFilmCard key={film.id} film={film}/>))}
+            {similarFilms === null ?
+              <div>{exit}</div> :
+              similarFilms.slice(0,4).map((item) => <SmallFilmCard key={item.id} film={item}/>)}
           </div>
         </section>
 
         <footer className="page-footer">
-          <div className="logo">
-            <a href="main.html" className="logo__link logo__link--light">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </a>
-          </div>
+          <Logo />
 
           <div className="copyright">
             <p>© 2019 What to watch Ltd.</p>
@@ -134,4 +153,5 @@ function FilmScreen({films}: FilmScreenProps):JSX.Element {
   );
 }
 
-export default FilmScreen;
+export {FilmScreen};
+export default connector(FilmScreen);

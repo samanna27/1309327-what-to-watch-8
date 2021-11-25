@@ -7,30 +7,57 @@ import {
 } from 'axios';
 import {State} from '../types/state';
 import {
-  genreChange,
-  provideFilmList,
+  changeGenre,
+  changeRenderedFilms,
   resetFilmList,
   loadFilms,
+  loadFilmData,
+  loadPromoFilmData,
+  loadSimilarFilms,
+  loadMyListFilms,
+  loadComments,
+  addComment,
   requireAuthorization,
-  requireLogout
+  requireLogout,
+  redirectToRoute,
+  changeUserEmail,
+  updateFilmsData
 } from '../store/action';
 
 export enum ActionType {
-  GenreChange = 'main/genreChange',
-  ProvideFilmList = 'main/ProvideFilmList',
+  ChangeGenre = 'main/changeGenre',
+  ChangeRenderedFilms = 'main/changeRenderedFilms',
   ResetFilmList = 'main/ResetFilmList',
   LoadFilms = 'data/loadFilms',
+  LoadFilmData = 'data/loadFilmData',
+  LoadPromoFilmData = 'data/loadPromoFilmData',
+  LoadSimilarFilms = 'data/loadSimilarFilms',
+  LoadMyListFilms = 'data/loadMyListFilms',
+  LoadComments = 'data/loadComments',
+  AddComment = 'data/addComment',
   RequireAuthorization = 'user/requireAuthorization',
   RequireLogout = 'user/requireLogout',
+  RedirectToRoute = 'main/redirectToRoute',
+  ChangeUserEmail = 'main/changeUserEmail',
+  UpdateFilmsData = 'data/updateFilmsData'
 }
 
 export type Actions =
- | ReturnType<typeof genreChange>
- | ReturnType<typeof provideFilmList>
+ | ReturnType<typeof changeGenre>
+ | ReturnType<typeof changeRenderedFilms>
  | ReturnType<typeof resetFilmList>
  | ReturnType<typeof loadFilms>
+ | ReturnType<typeof loadFilmData>
+ | ReturnType<typeof loadPromoFilmData>
+ | ReturnType<typeof loadSimilarFilms>
+ | ReturnType<typeof loadMyListFilms>
+ | ReturnType<typeof loadComments>
+ | ReturnType<typeof addComment>
  | ReturnType<typeof requireAuthorization>
- | ReturnType<typeof requireLogout>;
+ | ReturnType<typeof requireLogout>
+ | ReturnType<typeof redirectToRoute>
+ | ReturnType<typeof changeUserEmail>
+ | ReturnType<typeof updateFilmsData>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 

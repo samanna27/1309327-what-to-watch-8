@@ -1,54 +1,46 @@
-// import { Film } from '../../types/film';
-import { GENRES, FILM_CARD_COUNT_PER_STEP } from '../../const';
-import FilmsListComponent from '../films-list-component/films-list-component';
+import { Link } from 'react-router-dom';
 import {bindActionCreators, Dispatch} from 'redux';
 import {connect, ConnectedProps} from 'react-redux';
-import {provideFilmList} from '../../store/action';
+import {changeGenre} from '../../store/action';
 import {State} from '../../types/state';
 import {Actions} from '../../types/action';
-import ShowMoreButton from '../show-more-button/show-more-button';
+import { useRef, useState} from 'react';
 
-type GenresListProps = {
-  // films: Film[];
-}
-
-const mapStateToProps = ({genre, filmList, films, renderedFilms}: State) => ({
-  genre,
-  filmList,
+const mapStateToProps = ({ films}: State) => ({
   films,
-  renderedFilms,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onGenreClick: provideFilmList,
+  onGenreClick: changeGenre,
 }, dispatch);
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & GenresListProps;
+type ConnectedComponentProps = PropsFromRedux;
 
-function GenresList(props: ConnectedComponentProps):JSX.Element {
-  const { filmList, onGenreClick} = props;
-  const filmCount = filmList.length;
-  let renderedFilms = 0;
+function GenresList({films, onGenreClick}: ConnectedComponentProps):JSX.Element {
+  const genres = new Set(films.map((film)=>film.genre));
+  const genreTab = useRef<HTMLLIElement>(null);
+  const [isActiveGenre, setIsActiveGenre] = useState('All genres');
 
   return (
-    <>
-      <ul className="catalog__genres-list">
-
-        {GENRES.map((genre)=>(
-          <li key={genre} className="catalog__genres-item">
-            <a href="#" className="catalog__genres-link" onClick={() => onGenreClick(genre)}>{genre}</a>
-          </li>
-        ))}
-      </ul>
-
-      {renderedFilms < filmCount? renderedFilms += FILM_CARD_COUNT_PER_STEP: renderedFilms=filmCount}
-      <FilmsListComponent films={filmList.slice(0, renderedFilms)} />
-      {renderedFilms === filmCount ? null: <ShowMoreButton renderedFilms={renderedFilms} filmCount={filmCount} filmList={filmList}/>}
-      {/* {document.querySelector('.catalog__genres-item')? null: document.querySelector('.catalog__genres-item').classList.add('catalog__genres-item--active')} */}
-    </>
+    <ul className="catalog__genres-list">
+      {['All genres',...genres].map((genre) => (
+        <li key={genre}
+          ref={genreTab}
+          className={genre === isActiveGenre? 'catalog__genres-item catalog__genres-item--active' : 'catalog__genres-item'}
+        >
+          <Link to="#" className="catalog__genres-link" onClick={(event) => {
+            setIsActiveGenre(genre);
+            onGenreClick(genre);
+          }}
+          >
+            {genre}
+          </Link>
+        </li>
+      ))}
+    </ul>
   );
 }
 

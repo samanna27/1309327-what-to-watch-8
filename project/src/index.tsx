@@ -6,40 +6,33 @@ import {createAPI} from './services/api';
 import {Provider} from 'react-redux';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import App from './components/app/app';
-import { films } from './mocks/films';
 import {reducer} from './store/reducer';
 import {requireAuthorization} from './store/action';
-import {fetchFilmAction, checkAuthAction} from './store/api-actions';
+import {fetchFilmsAction, checkAuthAction, fetchPromoFilmAction} from './store/api-actions';
 import {ThunkAppDispatch} from './types/action';
 import {AuthorizationStatus} from './const';
+import {redirect} from './store/middlewares/redirect';
 
 const api = createAPI(
   () => store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth)),
 );
 
-const PromoFilmData = {
-  PROMO_FILM_TITLE: 'The Grand Budapest Hotel',
-  PROMO_FILM_GENRE: 'Drama',
-  PROMO_FILM_DATE: 2014,
-};
-
-const store = createStore(
+export const store = createStore(
   reducer,
   composeWithDevTools(
     applyMiddleware(thunk.withExtraArgument(api)),
+    applyMiddleware(redirect),
   ),
 );
 
 (store.dispatch as ThunkAppDispatch)(checkAuthAction());
-(store.dispatch as ThunkAppDispatch)(fetchFilmAction());
+(store.dispatch as ThunkAppDispatch)(fetchFilmsAction());
+(store.dispatch as ThunkAppDispatch)(fetchPromoFilmAction());
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store = {store}>
-      <App
-        promoFilmTitle={PromoFilmData.PROMO_FILM_TITLE} promoFilmGenre={PromoFilmData.PROMO_FILM_GENRE} promoFilmDate={PromoFilmData.PROMO_FILM_DATE}
-        films={films}
-      />
+      <App />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'));

@@ -4,7 +4,8 @@ export enum AppRoute {
   Main = '/',
   MyList = '/mylist',
   Player = '/player/:id',
-  SignIn = '/login'
+  SignIn = '/login',
+  NotFoundScreen = ''
 }
 
 export enum AuthorizationStatus {
@@ -13,36 +14,30 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN',
 }
 
-// export const GENRES = [
-//   AllGenres: 'All genres',
-//   Comedies: 'Comedy',
-//   Crime: 'Crime',
-//   Documentary: 'Documentary',
-//   Dramas: 'Drama',
-//   Horror: 'Horror',
-//   KidsAndFamily: 'Kids & Family',
-//   Romance: 'Romance',
-//   SciFi: 'Sci-Fi',
-//   Thrillers: 'Thriller',
-// ];
-
-export const GENRES = [
-  'All genres',
-  'Comedies',
-  'Crime',
-  'Documentary',
-  'Dramas',
-  'Horror',
-  'Kids & Family',
-  'Romance',
-  'Sci-Fi',
-  'Thrillers',
-];
+export const FILM_GENRES = {
+  'All genres': 'All genres',
+  'Comedies': 'Comedy',
+  'Crime': 'Crime',
+  'Documentary': 'Documentary',
+  'Dramas': 'Drama',
+  'Horror': 'Horror',
+  'Kids & Family': 'Kids & Family',
+  'Romance': 'Romance',
+  'Sci-Fi': 'Sci-Fi',
+  'Thrillers': 'Thriller',
+};
 
 export enum APIRoute {
   Films = '/films',
+  Promo = 'GET/promo',
+  Film = 'GET/films/:id',
+  SimilarFilms = 'GET/films/:id/similar',
+  Comments = '/comments/:filmId',
   Login = '/login',
   Logout = '/logout',
 }
 
 export const FILM_CARD_COUNT_PER_STEP = 8;
+
+export const MIN_COMMENT_LENGTH = 50;
+export const MAX_COMMENT_LENGTH = 400;

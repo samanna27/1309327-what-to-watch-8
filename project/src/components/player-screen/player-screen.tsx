@@ -1,66 +1,137 @@
 import { Film } from '../../types/film';
+import {useEffect, useRef} from 'react';
+import SvgLogo from '../svg-logo/svg-logo';
+import {useState} from 'react';
+import {Link} from 'react-router-dom';
+import { AppRoute } from '../../const';
+import LoadingScreen from '../loading-screen/loading-screen';
 
 type PlayerScreenProps = {
-  films: Film[];
+  film: Film | null;
 }
 
-function PlayerScreen({films}: PlayerScreenProps):JSX.Element {
-  const {duration} = films[0];
+function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
+  const duration = film ? film.duration : 0;
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [remainingTime, setRemainingTime] = useState<number>(0);
+
+  useEffect(() => {
+    if (videoRef.current === null) {
+      return;
+    }
+
+    if (isPlaying) {
+      setTimeout(() => {
+        if (videoRef.current !== null) {
+          videoRef.current.play();
+        }
+      }, 1000);
+    }
+  }, [isPlaying]);
+
+  const toggleFullscreen = function () {
+
+    if (!document.fullscreenElement) {
+      videoRef.current?.requestFullscreen().catch((err) => {
+        <LoadingScreen />;
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    videoRef.current ?
+      setRemainingTime(+(duration) - videoRef.current?.currentTime) :
+      setRemainingTime(0);
+  };
+
+  const formattingTime = function (timeInSeconds: number) {
+    const hours = Math.floor(timeInSeconds / 360);
+    const minutes = Math.floor(timeInSeconds / 60 - hours * 60);
+    const seconds = Math.floor(timeInSeconds - hours*360 - minutes * 60);
+    const hourValue=`${hours<10 ? '0' : ''}${hours}`;
+    const minuteValue=`${minutes<10 ? '0' : ''}${minutes}`;
+    const secondValue=`${seconds<10 ? '0' : ''}${seconds}`;
+
+    const mediaTime = `${hourValue}:${minuteValue}:${secondValue}`;
+    return mediaTime;
+  };
+
+  const formattingTimeBarPercentage = function(timeInSeconds: number) {
+    const percentage = Math.floor((+duration - timeInSeconds) *100 / +duration);
+    return percentage;
+  };
+
+
   return (
     <>
-      <div className="visually-hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-          <symbol id="add" viewBox="0 0 19 20">
-            <title>+</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <polygon id="+" fill="#EEE5B5" points="10.777832 11.2880859 10.777832 19.5527344 8.41650391 19.5527344 8.41650391 11.2880859 0.627929688 11.2880859 0.627929688 8.92675781 8.41650391 8.92675781 8.41650391 0.662109375 10.777832 0.662109375 10.777832 8.92675781 18.5664062 8.92675781 18.5664062 11.2880859"/>
-            </g>
-          </symbol>
-          <symbol id="full-screen" viewBox="0 0 27 27">
-            <path fillRule="evenodd" clipRule="evenodd" d="M23.8571 0H16V3.14286H23.8571V11H27V3.14286V0H23.8571Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M27 23.8571V16H23.8571V23.8571H16V27H23.8571H27L27 23.8571Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M0 3.14286L0 11H3.14286L3.14286 3.14286L11 3.14286V0H3.14286H0L0 3.14286Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M3.14286 27H11V23.8571H3.14286L3.14286 16H0L0 23.8571V27H3.14286Z" fill="#FFF9D9" fillOpacity="0.7"/>
-          </symbol>
-          <symbol id="in-list" viewBox="0 0 18 14">
-            <path fillRule="evenodd" clipRule="evenodd" d="M2.40513 5.35353L6.1818 8.90902L15.5807 0L18 2.80485L6.18935 14L0 8.17346L2.40513 5.35353Z" fill="#EEE5B5"/>
-          </symbol>
-          <symbol id="pause" viewBox="0 0 14 21">
-            <title>Artboard</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Artboard" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <polygon id="Line" fill="#EEE5B5" fillRule="nonzero" points="0 -1.11910481e-13 4 -1.11910481e-13 4 21 0 21"/>
-              <polygon id="Line" fill="#EEE5B5" fillRule="nonzero" points="10 -1.11910481e-13 14 -1.11910481e-13 14 21 10 21"/>
-            </g>
-          </symbol>
-        </svg>
-      </div>
+      <SvgLogo />
 
       <div className="player">
-        <video src="#" className="player__video" poster="img/player-poster.jpg"></video>
+        {isPlaying ?
+          <video
+            src={film?.videoSrc}
+            className="player__video"
+            poster="img/player-poster.jpg"
+            ref={videoRef}
+            muted
+            preload="auto"
+            controls
+            onTimeUpdate={(event)=> {
+              handleTimeUpdate();
+            }}
+          >
+          </video> :
+          <video
+            src="#"
+            className="player__video"
+            poster="img/player-poster.jpg"
+            ref={videoRef}
+            muted
+            preload="auto"
+          >
+          </video>}
 
-        <button type="button" className="player__exit">Exit</button>
+        <Link to={AppRoute.Main}>
+          <button type="button" className="player__exit">Exit</button>
+        </Link>
 
         <div className="player__controls">
           <div className="player__controls-row">
             <div className="player__time">
-              <progress className="player__progress" value="30" max="100"></progress>
-              <div className="player__toggler" style={{left: '30%'}}>Toggler</div>
+              <progress className="player__progress" value={formattingTimeBarPercentage(remainingTime)} max="100"></progress>
+              <div className="player__toggler" style={{left: `${formattingTimeBarPercentage(remainingTime)}%`}}>Toggler</div>
             </div>
-            <div className="player__time-value">{duration}</div>
+            <div className="player__time-value">{formattingTime(remainingTime)}</div>
           </div>
 
           <div className="player__controls-row">
-            <button type="button" className="player__play">
-              <svg viewBox="0 0 19 19" width="19" height="19">
-                <use xlinkHref="#play-s"></use>
-              </svg>
-              <span>Play</span>
-            </button>
+            {isPlaying ?
+              <button type="button" className="player__play"
+                onClick={()=>{setIsPlaying(!isPlaying);}}
+              >
+                <svg viewBox="0 0 14 21" width="14" height="21">
+                  <use xlinkHref="#pause"></use>
+                </svg>
+                <span>Pause</span>
+              </button> :
+              <button type="button" className="player__play"
+                onClick={()=>{
+                  setIsPlaying(!isPlaying);
+                }}
+              >
+                <svg viewBox="0 0 19 19" width="19" height="19">
+                  <use xlinkHref="#play-s"></use>
+                </svg>
+                <span>Play</span>
+              </button>}
             <div className="player__name">Transpotting</div>
 
-            <button type="button" className="player__full-screen">
+            <button type="button" className="player__full-screen"
+              onClick={()=>toggleFullscreen()}
+            >
               <svg viewBox="0 0 27 27" width="27" height="27">
                 <use xlinkHref="#full-screen"></use>
               </svg>

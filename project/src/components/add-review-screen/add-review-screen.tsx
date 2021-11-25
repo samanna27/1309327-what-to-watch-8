@@ -1,71 +1,122 @@
-import { Film, ReviewStarRating } from '../../types/film';
-import {useState, FormEvent, ChangeEvent} from 'react';
+import Logo from '../logo/logo';
+import {useHistory} from 'react-router-dom';
+import {ChangeEvent, FormEvent, useRef, useState} from 'react';
+import {connect, ConnectedProps} from 'react-redux';
+import {fetchPostCommentAction, fetchFilmDataAction} from '../../store/api-actions';
+import {ThunkAppDispatch} from '../../types/action';
+import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH} from '../../const';
+import {Film} from '../../types/film';
+import ReviewRatingStar from './review-rating-star';
+import LoginLogout from '../login-logout/login-logout';
+import SvgLogo from '../svg-logo/svg-logo';
+import {Link, useParams} from 'react-router-dom';
+import {store} from '../../index';
+import {State} from '../../types/state';
+import Loader from 'react-loader-spinner';
 
 type AddReviewScreenProps = {
-  films: Film[];
-  onReviewInput: (rate: ReviewStarRating, text: string) => void;
+  film: Film | null,
 }
 
-function AddReviewScreen({films, onReviewInput}: AddReviewScreenProps):JSX.Element {
-  const firstFilm = films[0];
-  const { poster, title } = firstFilm;
-  const text = '';
+type AddReviewScreenRouteParams = {
+  id: string
+}
+
+const mapStateToProps = ({currentFilm}: State) => ({
+  currentFilm,
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & AddReviewScreenProps;
+
+function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
+  const {film, currentFilm} = props;
+  const params = useParams<AddReviewScreenRouteParams>();
+  const filmId = params.id;
+  const textRef = useRef<HTMLTextAreaElement>(null);
+  const history = useHistory();
+  const [rating, setRating] = useState<number>(0);
+  const [newComment, setNewComment] = useState<string>('');
+
+  if (film === null && currentFilm === null) {
+    (store.dispatch as ThunkAppDispatch)(fetchFilmDataAction(filmId));
+    return (
+      <Loader type="Puff"
+        color="#00BFFF"
+        height={500}
+        width={500}
+      />
+    );
+  }
+
+  const { id, bigPoster, poster, title } = film || currentFilm || {};
+
   let starRatingCount = 10;
-  const starRating =  new Array(10).fill('').map((index) => {
+  const stars =  new Array(10).fill('').map((index) => {
     index=starRatingCount;
     starRatingCount--;
 
     return index;
   });
-  const [rating, setRating] = useState([false, false, false, false, false, false, false, false, false, false]);
+
+  const handleInputAreaChange = (evt: ChangeEvent<HTMLInputElement>, ratingToSet: number) => {
+    setRating(ratingToSet);
+  };
+
+  const handleTextAreaChange = (evt: ChangeEvent<HTMLTextAreaElement>) => {
+    setNewComment(evt.target.value);
+    if (newComment !== null) {
+      const newCommentLength = newComment.length;
+
+      if (newCommentLength > 0 && newCommentLength < MIN_COMMENT_LENGTH) {
+        evt.target.setCustomValidity(
+          `Комментарий должен состоять минимум из 50 символов${'.'} Осталось ещё ${
+            MIN_COMMENT_LENGTH - newCommentLength
+          } симв.`    );
+      } else if (newCommentLength > MAX_COMMENT_LENGTH) {
+        evt.target.setCustomValidity(
+          `Заголовок не должен превышать 400 символов${'.'} Удалите лишние ${
+            newCommentLength - MAX_COMMENT_LENGTH
+          } симв.`    );
+      } else if (newCommentLength === 0) {
+        evt.target.setCustomValidity('Обязательное поле');
+      } else {
+        evt.target.setCustomValidity('');
+      }
+
+      evt.target.reportValidity();
+    }
+  };
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    (store.dispatch as ThunkAppDispatch)(fetchPostCommentAction(
+      {rating: rating,
+        comment: newComment},
+      +filmId));
+
+    history.push(`/films/${id}`);
+  };
+
+  const isFormValid = (rating !== 0 && newComment.length>50 && newComment.length<400);
 
   return (
     <>
-      <div className="visually-hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-          <symbol id="add" viewBox="0 0 19 20">
-            <title>+</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <polygon id="+" fill="#EEE5B5" points="10.777832 11.2880859 10.777832 19.5527344 8.41650391 19.5527344 8.41650391 11.2880859 0.627929688 11.2880859 0.627929688 8.92675781 8.41650391 8.92675781 8.41650391 0.662109375 10.777832 0.662109375 10.777832 8.92675781 18.5664062 8.92675781 18.5664062 11.2880859"/>
-            </g>
-          </symbol>
-          <symbol id="full-screen" viewBox="0 0 27 27">
-            <path fillRule="evenodd" clipRule="evenodd" d="M23.8571 0H16V3.14286H23.8571V11H27V3.14286V0H23.8571Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M27 23.8571V16H23.8571V23.8571H16V27H23.8571H27L27 23.8571Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M0 3.14286L0 11H3.14286L3.14286 3.14286L11 3.14286V0H3.14286H0L0 3.14286Z" fill="#FFF9D9" fillOpacity="0.7"/>
-            <path fillRule="evenodd" clipRule="evenodd" d="M3.14286 27H11V23.8571H3.14286L3.14286 16H0L0 23.8571V27H3.14286Z" fill="#FFF9D9" fillOpacity="0.7"/>
-          </symbol>
-          <symbol id="in-list" viewBox="0 0 18 14">
-            <path fillRule="evenodd" clipRule="evenodd" d="M2.40513 5.35353L6.1818 8.90902L15.5807 0L18 2.80485L6.18935 14L0 8.17346L2.40513 5.35353Z" fill="#EEE5B5"/>
-          </symbol>
-          <symbol id="pause" viewBox="0 0 14 21">
-            <title>Artboard</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Artboard" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <polygon id="Line" fill="#EEE5B5" fillRule="nonzero" points="0 -1.11910481e-13 4 -1.11910481e-13 4 21 0 21"/>
-              <polygon id="Line" fill="#EEE5B5" fillRule="nonzero" points="10 -1.11910481e-13 14 -1.11910481e-13 14 21 10 21"/>
-            </g>
-          </symbol>
-        </svg>
-      </div>
+      <SvgLogo />
 
       <section className="film-card film-card--full">
         <div className="film-card__header">
           <div className="film-card__bg">
-            <img src={poster} alt={title} />
+            <img src={bigPoster} alt={title} />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
 
           <header className="page-header">
-            <div className="logo">
-              <a href="main.html" className="logo__link">
-                <span className="logo__letter logo__letter--1">W</span>
-                <span className="logo__letter logo__letter--2">T</span>
-                <span className="logo__letter logo__letter--3">W</span>
-              </a>
-            </div>
+            <Logo />
 
             <nav className="breadcrumbs">
               <ul className="breadcrumbs__list">
@@ -73,21 +124,11 @@ function AddReviewScreen({films, onReviewInput}: AddReviewScreenProps):JSX.Eleme
                   <a href="film-page.html" className="breadcrumbs__link">{title}</a>
                 </li>
                 <li className="breadcrumbs__item">
-                  <button className="breadcrumbs__link">Add review</button>
+                  <Link to={`/films/${id}/review`} className="breadcrumbs__link">Add review</Link>
                 </li>
               </ul>
             </nav>
-
-            <ul className="user-block">
-              <li className="user-block__item">
-                <div className="user-block__avatar">
-                  <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-                </div>
-              </li>
-              <li className="user-block__item">
-                <button className="user-block__link">Sign out</button>
-              </li>
-            </ul>
+            <LoginLogout />
           </header>
 
           <div className="film-card__poster film-card__poster--small">
@@ -96,37 +137,38 @@ function AddReviewScreen({films, onReviewInput}: AddReviewScreenProps):JSX.Eleme
         </div>
 
         <div className="add-review">
-          <form action="#" className="add-review__form"
-            onSubmit={(evt: FormEvent<HTMLFormElement>) => {
-              evt.preventDefault();
-              onReviewInput(starRating, text);
-            }}
+          <form
+            action="#"
+            className="add-review__form"
+            onSubmit={handleSubmit}
           >
             <div className="rating">
-              <div className="rating__stars">
-                {starRating.map((star, id) => {
-                  const keyValue = `${id}`;
-                  return(
-                    <>
-                      <input key={keyValue} className="rating__input" id={`star-${star}`} type="radio" name="rating" value={`star-${star}`}
-                        checked={rating[id]}
-                        onChange={({target}: ChangeEvent<HTMLInputElement>) => {
-                          const value = target.checked;
-                          setRating([...rating.slice(0, id), value, ...rating.slice(id + 1)]);
-                        }}
-                      />
-                      <label className="rating__label" htmlFor={`star-${star}`}>Rating {star}</label>
-                    </>
-                  );
-                })}
+              <div className="rating__stars" >
+                {stars.map((star) => <ReviewRatingStar key={star} rating={star} setRating={handleInputAreaChange}/>)}
               </div>
             </div>
 
-
             <div className="add-review__text">
-              <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text">{text}</textarea>
+              <textarea
+                ref={textRef}
+                className="add-review__textarea"
+                name="review-text"
+                id="review-text"
+                placeholder="Review text"
+                minLength={MIN_COMMENT_LENGTH}
+                maxLength={MAX_COMMENT_LENGTH}
+                value={newComment}
+                onChange={handleTextAreaChange}
+              >
+              </textarea>
               <div className="add-review__submit">
-                <button className="add-review__btn" type="submit">Post</button>
+                <button
+                  className="add-review__btn"
+                  disabled = {!isFormValid}
+                  type="submit"
+                >
+                  Post
+                </button>
               </div>
 
             </div>
@@ -138,4 +180,5 @@ function AddReviewScreen({films, onReviewInput}: AddReviewScreenProps):JSX.Eleme
   );
 }
 
-export default AddReviewScreen;
+export {AddReviewScreen};
+export default connector(AddReviewScreen);
