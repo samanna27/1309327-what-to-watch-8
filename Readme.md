@@ -1,7 +1,7 @@
 # Личный проект «Что посмотреть»
 
 * Студент: [Анна Самусева](https://up.htmlacademy.ru/react/8/user/1309327).
-* Наставник: [Анастасия Смирнова](https://htmlacademy.ru/profile/id232838).
+* Наставник: [Даниил Царёв](https://htmlacademy.ru/profile/id945835).
 
 ---
 
