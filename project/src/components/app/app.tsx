@@ -16,12 +16,10 @@ import AddReviewScreen from '../add-review-screen/add-review-screen';
 const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
-const mapStateToProps = ({authorizationStatus, isDataLoaded, films, promoFilm, currentFilm, currentId, comment}: State) => ({
+const mapStateToProps = ({authorizationStatus, isDataLoaded, films, currentId, comment}: State) => ({
   authorizationStatus,
   isDataLoaded,
   films,
-  promoFilm,
-  currentFilm,
   currentId,
   comment,
 });
@@ -32,7 +30,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux;
 
 function App(props: ConnectedComponentProps): JSX.Element {
-  const { films, authorizationStatus, isDataLoaded, promoFilm, currentFilm, currentId} = props;
+  const { films, authorizationStatus, isDataLoaded, currentId} = props;
 
   if (isCheckedAuth(authorizationStatus) || !isDataLoaded) {
     return (
@@ -55,7 +53,7 @@ function App(props: ConnectedComponentProps): JSX.Element {
         </PrivateRoute>
         <PrivateRoute exact path={AppRoute.AddReview} render={() => {
           const commentedFilm = films.find((film) => film.id === currentId);
-          if( commentedFilm) {
+          if(commentedFilm) {
             return <AddReviewScreen film={commentedFilm}/>;
           } else {
             return <AddReviewScreen film={null}/>;
@@ -63,8 +61,16 @@ function App(props: ConnectedComponentProps): JSX.Element {
         }}
         >
         </PrivateRoute>
-        <Route exact path={AppRoute.Player}>
-          <PlayerScreen film={promoFilm || currentFilm} />
+        <Route exact path={AppRoute.Player} render={(params)=>{
+          const filmId = parseInt(params.match.params.id, 10);
+          const filmToPlay = films.find((film) => film.id === filmId);
+          if(filmToPlay) {
+            return <PlayerScreen film={filmToPlay} />;
+          } else {
+            return <PlayerScreen film={null}/>;
+          }
+        }}
+        >
         </Route>
         <Route exact path={AppRoute.Film} render={(params) => {
           const filmId = parseInt(params.match.params.id, 10);

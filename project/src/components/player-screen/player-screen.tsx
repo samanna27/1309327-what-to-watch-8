@@ -3,7 +3,7 @@ import {useEffect, useRef} from 'react';
 import SvgLogo from '../svg-logo/svg-logo';
 import {useState} from 'react';
 import {Link} from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, PLAY_TIMEOUT } from '../../const';
 import LoadingScreen from '../loading-screen/loading-screen';
 
 type PlayerScreenProps = {
@@ -26,7 +26,7 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
         if (videoRef.current !== null) {
           videoRef.current.play();
         }
-      }, 1000);
+      }, PLAY_TIMEOUT);
     }
   }, [isPlaying]);
 
@@ -50,13 +50,16 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
   const formattingTime = function (timeInSeconds: number) {
     const hours = Math.floor(timeInSeconds / 360);
     const minutes = Math.floor(timeInSeconds / 60 - hours * 60);
-    const seconds = Math.floor(timeInSeconds - hours*360 - minutes * 60);
-    const hourValue=`${hours<10 ? '0' : ''}${hours}`;
-    const minuteValue=`${minutes<10 ? '0' : ''}${minutes}`;
-    const secondValue=`${seconds<10 ? '0' : ''}${seconds}`;
+    const seconds = Math.floor(timeInSeconds - hours * 360 - minutes * 60);
 
-    const mediaTime = `${hourValue}:${minuteValue}:${secondValue}`;
-    return mediaTime;
+    const hourValue = hours === 0
+      ? ''
+      : `${hours < 10 ? '0' : ''}${hours}:`;
+
+    const minuteValue = `${minutes < 10 ? '0' : ''}${minutes}`;
+    const secondValue = `${seconds < 10 ? '0' : ''}${seconds}`;
+
+    return `-${hourValue}${minuteValue}:${secondValue}`;
   };
 
   const formattingTimeBarPercentage = function(timeInSeconds: number) {
@@ -78,7 +81,7 @@ function PlayerScreen({film}: PlayerScreenProps):JSX.Element {
             ref={videoRef}
             muted
             preload="auto"
-            controls
+            autoPlay
             onTimeUpdate={(event)=> {
               handleTimeUpdate();
             }}

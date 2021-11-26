@@ -34,7 +34,6 @@ function LoginLogout(props: ConnectedComponentProps):JSX.Element {
               <img src={authInfo?.avatarUrl ? authInfo.avatarUrl : authInfo?.email} alt="User avatar" width="63" height="63" />
             </Link>
           </div>
-          {/* <p>{userEmail}</p> */}
         </li>
         <li className="user-block__item">
 

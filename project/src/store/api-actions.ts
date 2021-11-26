@@ -1,10 +1,24 @@
 import {ThunkActionResult} from '../types/action';
-import {loadFilms, loadFilmData, loadPromoFilmData, loadSimilarFilms, loadMyListFilms, loadComments, addComment, redirectToRoute, requireAuthorization, requireLogout, updateFilmsData, updateUserData} from './action';
-import {saveToken, dropToken, Token} from '../services/token';
-import {APIRoute, AuthorizationStatus, AppRoute} from '../const';
+import {
+  addComment,
+  loadComments,
+  loadFilmData,
+  loadFilms,
+  loadMyListFilms,
+  loadPromoFilmData,
+  loadSimilarFilms,
+  redirectToRoute,
+  requireAuthorization,
+  requireLogout,
+  submitCommentProcessingStatus,
+  updateFilmsData,
+  updateUserData
+} from './action';
+import {dropToken, saveToken} from '../services/token';
+import {APIRoute, AppRoute, AuthorizationStatus, CommentSubmitStatus, OK_CODE} from '../const';
 import {Film, FilmReview} from '../types/film';
 import {AuthData, AuthInfo} from '../types/auth-data';
-import {adaptToClient, adaptAuthInfoToClient} from '../components/adaptor/adaptor';
+import {adaptAuthInfoToClient, adaptToClient} from '../components/adaptor/adaptor';
 import {toast} from 'react-toastify';
 
 const COMMENT_POST_FAIL_MESSAGE = 'Ваш комментарий не был отправлен. Попробуйте еще раз.';
@@ -27,14 +41,12 @@ export const fetchPromoFilmAction = (): ThunkActionResult =>
     dispatch(loadPromoFilmData(adaptToClient(data)));
   };
 
-export const fetchSimilarFilmsAction = (filmId: string, currentId: number): ThunkActionResult =>
+export const fetchSimilarFilmsAction = (filmId: string, currentId: number | null): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     await api.get<Film[]>(`/films/${filmId}/similar`)
       .then((data) => {
-        if(data.status === 200) {
+        if(data.status === OK_CODE) {
           dispatch(loadSimilarFilms(data.data.map(adaptToClient), currentId));
-        } else {
-          dispatch(redirectToRoute(AppRoute.SignIn));
         }
       });
   };
@@ -53,16 +65,19 @@ export const fetchCommentsAction = (filmId: string): ThunkActionResult =>
 
 export const fetchPostCommentAction = (newComment: {rating: number, comment: string}, id: number): ThunkActionResult =>
   async (dispatch, _getState, api) => {
+    dispatch(submitCommentProcessingStatus(CommentSubmitStatus.Submitted));
     try {
       const {rating, comment} = newComment;
       await api.post<FilmReview>(`/comments/${id}`, {rating, comment})
         .then((data) => {
-          if(data.status === 200) {
+          if(data.status === OK_CODE) {
             dispatch(addComment(data.data, id));
+            dispatch(submitCommentProcessingStatus(CommentSubmitStatus.HappyProcessed));
           }
         });
     } catch {
       toast.info(COMMENT_POST_FAIL_MESSAGE);
+      dispatch(submitCommentProcessingStatus(CommentSubmitStatus.Failed));
     }
   };
 
@@ -70,7 +85,7 @@ export const fetchToggleFavoriteAction = (filmId: number, status: number): Thunk
   async (dispatch, _getState, api) => {
     await api.post<Film>(`/favorite/${filmId}/${status}`)
       .then((data) => {
-        if(data.status === 200) {
+        if(data.status === OK_CODE) {
           dispatch(updateFilmsData(adaptToClient(data.data)));
         } else {
           dispatch(redirectToRoute(AppRoute.SignIn));
@@ -83,7 +98,7 @@ export const checkAuthAction = (): ThunkActionResult =>
 
     await api.get<AuthInfo>(APIRoute.Login)
       .then((data) => {
-        if(data.status === 200) {
+        if(data.status === OK_CODE) {
           dispatch(updateUserData(adaptAuthInfoToClient(data.data)));
           dispatch(requireAuthorization(AuthorizationStatus.Auth));
         } else {
@@ -94,10 +109,13 @@ export const checkAuthAction = (): ThunkActionResult =>
 
 export const loginAction = ({login: email, password}: AuthData): ThunkActionResult =>
   async (dispatch, _getState, api) => {
-    const {data: {token}} = await api.post<{token: Token}>(APIRoute.Login, {email, password});
-    saveToken(token);
-    dispatch(requireAuthorization(AuthorizationStatus.Auth));
-    dispatch(redirectToRoute(AppRoute.Main));
+    await api.post<AuthInfo>(APIRoute.Login, {email, password})
+      .then((response) => {
+        dispatch(updateUserData(adaptAuthInfoToClient(response.data)));
+        saveToken(response.data.token);
+        dispatch(requireAuthorization(AuthorizationStatus.Auth));
+        dispatch(redirectToRoute(AppRoute.Main));
+      });
   };
 
 export const logoutAction = (): ThunkActionResult =>

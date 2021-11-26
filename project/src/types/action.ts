@@ -21,7 +21,8 @@ import {
   requireLogout,
   redirectToRoute,
   updateFilmsData,
-  updateUserData
+  updateUserData,
+  submitCommentProcessingStatus
 } from '../store/action';
 
 export enum ActionType {
@@ -39,7 +40,8 @@ export enum ActionType {
   RequireLogout = 'user/requireLogout',
   RedirectToRoute = 'main/redirectToRoute',
   UpdateFilmsData = 'data/updateFilmsData',
-  UpdateUserData = 'user/updateUserData'
+  UpdateUserData = 'user/updateUserData',
+  SubmitCommentProcessingStatus = 'data/submitCommentProcessingStatus'
 }
 
 export type Actions =
@@ -57,7 +59,8 @@ export type Actions =
  | ReturnType<typeof requireLogout>
  | ReturnType<typeof redirectToRoute>
  | ReturnType<typeof updateFilmsData>
- | ReturnType<typeof updateUserData>;
+ | ReturnType<typeof updateUserData>
+ | ReturnType<typeof submitCommentProcessingStatus>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 

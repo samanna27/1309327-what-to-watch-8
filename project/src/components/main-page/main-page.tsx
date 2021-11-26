@@ -4,13 +4,12 @@ import Logo from '../logo/logo';
 import GenresList from '../genres-list/genres-list';
 import SmallFilmCard from '../small-film-card/small-film-card';
 import ShowMoreButton from '../show-more-button/show-more-button';
-import PlayerScreen from '../player-screen/player-screen';
 import {State} from '../../types/state';
 import LoginLogout from '../login-logout/login-logout';
 import MyListButton from '../my-list-button/my-list-button';
-import {Link} from 'react-router-dom';
+import PlayButton from '../play-button/play-button';
 
-const mapStateToProps = ({promoFilm, films, genre, renderedFilms}: State) => ({
+const mapStateToProps = ({promoFilm, films, genre, renderedFilms, currentId, currentFilm}: State) => ({
   promoFilm,
   films,
   genre,
@@ -54,20 +53,7 @@ function MainPage(props: ConnectedComponentProps): JSX.Element {
               </p>
 
               <div className="film-card__buttons">
-                <Link to={`/player/${promoFilm?.id}`} className="btn film-card__button">
-                  <button
-                    className="btn btn--play film-card__button"
-                    type="button"
-                    onClick={()=>{
-                      <PlayerScreen film={promoFilm} />;
-                    }}
-                  >
-                    <svg viewBox="0 0 19 19" width="19" height="19">
-                      <use xlinkHref="#play-s"></use>
-                    </svg>
-                    <span>Play</span>
-                  </button>
-                </Link>
+                <PlayButton film={promoFilm}/>
                 <MyListButton film={promoFilm}/>
               </div>
             </div>

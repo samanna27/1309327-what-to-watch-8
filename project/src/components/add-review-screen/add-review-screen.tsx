@@ -4,7 +4,7 @@ import {ChangeEvent, FormEvent, useRef, useState} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {fetchPostCommentAction, fetchFilmDataAction} from '../../store/api-actions';
 import {ThunkAppDispatch} from '../../types/action';
-import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH} from '../../const';
+import {MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH, CommentSubmitStatus} from '../../const';
 import {Film} from '../../types/film';
 import ReviewRatingStar from './review-rating-star';
 import LoginLogout from '../login-logout/login-logout';
@@ -22,8 +22,9 @@ type AddReviewScreenRouteParams = {
   id: string
 }
 
-const mapStateToProps = ({currentFilm}: State) => ({
+const mapStateToProps = ({currentFilm, commentSubmitStatus}: State) => ({
   currentFilm,
+  commentSubmitStatus,
 });
 
 const connector = connect(mapStateToProps);
@@ -32,7 +33,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & AddReviewScreenProps;
 
 function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
-  const {film, currentFilm} = props;
+  const {film, currentFilm, commentSubmitStatus} = props;
   const params = useParams<AddReviewScreenRouteParams>();
   const filmId = params.id;
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -159,6 +160,7 @@ function AddReviewScreen(props: ConnectedComponentProps):JSX.Element {
                 maxLength={MAX_COMMENT_LENGTH}
                 value={newComment}
                 onChange={handleTextAreaChange}
+                disabled={commentSubmitStatus===CommentSubmitStatus.Submitted}
               >
               </textarea>
               <div className="add-review__submit">

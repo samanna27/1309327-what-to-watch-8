@@ -5,7 +5,13 @@ export enum AppRoute {
   MyList = '/mylist',
   Player = '/player/:id',
   SignIn = '/login',
-  NotFoundScreen = ''
+}
+
+export enum CommentSubmitStatus {
+  NotSubmitted = 'NotSubmitted',
+  Submitted = 'Submitted',
+  HappyProcessed = 'HappyProcessed',
+  Failed = 'Failed',
 }
 
 export enum AuthorizationStatus {
@@ -13,19 +19,6 @@ export enum AuthorizationStatus {
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN',
 }
-
-export const FILM_GENRES = {
-  'All genres': 'All genres',
-  'Comedies': 'Comedy',
-  'Crime': 'Crime',
-  'Documentary': 'Documentary',
-  'Dramas': 'Drama',
-  'Horror': 'Horror',
-  'Kids & Family': 'Kids & Family',
-  'Romance': 'Romance',
-  'Sci-Fi': 'Sci-Fi',
-  'Thrillers': 'Thriller',
-};
 
 export enum APIRoute {
   Films = '/films',
@@ -41,3 +34,7 @@ export const FILM_CARD_COUNT_PER_STEP = 8;
 
 export const MIN_COMMENT_LENGTH = 50;
 export const MAX_COMMENT_LENGTH = 400;
+
+export const PLAY_TIMEOUT = 1000;
+
+export const OK_CODE = 200;

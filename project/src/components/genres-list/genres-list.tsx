@@ -31,7 +31,7 @@ function GenresList({films, onGenreClick}: ConnectedComponentProps):JSX.Element 
           ref={genreTab}
           className={genre === isActiveGenre? 'catalog__genres-item catalog__genres-item--active' : 'catalog__genres-item'}
         >
-          <Link to="#" className="catalog__genres-link" onClick={(event) => {
+          <Link to="#" className="catalog__genres-link" onClick={() => {
             setIsActiveGenre(genre);
             onGenreClick(genre);
           }}
