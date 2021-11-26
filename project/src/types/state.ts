@@ -8,7 +8,7 @@ export type State = {
   myListFilms: Film[] | null,
   currentFilm: Film | null,
   promoFilm: Film | null,
-  currentId: number,
+  currentId: number| null,
   similarFilms: Film[] | null,
   comments: FilmReview[],
   comment: FilmReview | null,
@@ -16,4 +16,5 @@ export type State = {
   isDataLoaded: boolean,
   renderedFilms: number,
   authInfo: AuthInfo | null,
+  commentSubmitStatus: string,
 };

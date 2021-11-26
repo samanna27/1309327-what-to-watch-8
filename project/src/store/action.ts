@@ -38,7 +38,7 @@ export const loadPromoFilmData = (promoFilm: Film) => ({
   },
 } as const);
 
-export const loadSimilarFilms = (similarFilms: Film[] | null, currentId: number) => ({
+export const loadSimilarFilms = (similarFilms: Film[] | null, currentId: number | null) => ({
   type: ActionType.LoadSimilarFilms,
   payload: {
     similarFilms, currentId,
@@ -89,4 +89,9 @@ export const updateFilmsData = (film: Film) => ({
 export const updateUserData = (authInfo: AuthInfo) => ({
   type: ActionType.UpdateUserData,
   payload: authInfo,
+} as const);
+
+export const submitCommentProcessingStatus = (status: string) => ({
+  type: ActionType.SubmitCommentProcessingStatus,
+  payload: status,
 } as const);

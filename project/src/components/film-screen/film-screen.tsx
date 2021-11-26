@@ -12,8 +12,8 @@ import Loader from 'react-loader-spinner';
 import SvgLogo from '../svg-logo/svg-logo';
 import LoginLogout from '../login-logout/login-logout';
 import MyListButton from '../my-list-button/my-list-button';
-import PlayerScreen from '../player-screen/player-screen';
 import { AuthorizationStatus } from '../../const';
+import PlayButton from '../play-button/play-button';
 
 type FilmScreenProps = {
   film: Film | null,
@@ -96,18 +96,7 @@ function FilmScreen({ film, similarFilms, currentFilm, currentId, authorizationS
               </p>
 
               <div className="film-card__buttons">
-                <Link to={`/player/${film?.id}`} className="btn film-card__button">
-                  <button className="btn btn--play film-card__button" type="button"
-                    onClick={()=>{
-                      <PlayerScreen film={film} />;
-                    }}
-                  >
-                    <svg viewBox="0 0 19 19" width="19" height="19">
-                      <use xlinkHref="#play-s"></use>
-                    </svg>
-                    <span>Play</span>
-                  </button>
-                </Link>
+                <PlayButton film={film}/>
                 <MyListButton film={film}/>
 
                 { authorizationStatus === AuthorizationStatus.Auth ?

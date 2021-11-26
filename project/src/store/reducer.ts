@@ -1,6 +1,6 @@
 import {Actions, ActionType} from '../types/action';
 import {State} from '../types/state';
-import {AuthorizationStatus} from '../const';
+import {AuthorizationStatus, CommentSubmitStatus} from '../const';
 import {Film} from '../types/film';
 import {store} from '../index';
 import {fetchCommentsAction} from '../store/api-actions';
@@ -14,7 +14,7 @@ const initialState = {
   myListFilms: null,
   currentFilm: null,
   promoFilm: null,
-  currentId: -1,
+  currentId: null,
   similarFilms: movies,
   comments: [],
   comment: null,
@@ -22,6 +22,7 @@ const initialState = {
   isDataLoaded: false,
   renderedFilms: 8,
   authInfo: null,
+  commentSubmitStatus: CommentSubmitStatus.NotSubmitted,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -95,6 +96,10 @@ const reducer = (state: State = initialState, action: Actions): State => {
     case ActionType.UpdateUserData: {
       const authInfo = action.payload;
       return {...state, authInfo};
+    }
+    case ActionType.SubmitCommentProcessingStatus: {
+      const commentSubmitStatus = action.payload;
+      return {...state, commentSubmitStatus};
     }
     default:
       return state;
